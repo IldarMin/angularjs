@@ -1,0 +1,13 @@
+<!-- <div class="m-b-0"> -->
+    <div class="bootstrap-tagsinput">
+    <span ng-repeat="tag in list track by $index" class="tag label label-info" ng-show="tag != ''">
+    	{{tag}}<span data-role="remove" ng-click='removeTag($index)'></span>
+    </span> 
+    <input type="text" placeholder="" ng-model='inputTag' ng-blur='lostFocus()' ng-keypress='catchKeyPress($event)' style="width: 60px;"></div>
+<!--     <select multiple="" data-role="tagsinput" style="display: none;">
+    <option value="Amsterdam" selected="selected">Amsterdam</option>
+        <option value="Amsterdam" selected="selected">Amsterdam</option>
+        <option value="Washington" selected="selected">Washington</option>
+        <option value="Sydney" selected="selected">Sydney</option>
+    </select> -->
+<!-- </div> -->

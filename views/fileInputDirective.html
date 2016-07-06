@@ -1,0 +1,29 @@
+<div ng-show="newFile">
+	<input type="file" name="file" 
+		onchange="angular.element(this).scope().uploadFile(this.files)" 
+		class="filestyle" data-input="false" id="filestyle-{{showmodel}}" tabindex="-1" style="position: absolute; clip: rect(0px 0px 0px 0px);">
+	<div class="bootstrap-filestyle input-group">
+		<span class="group-span-filestyle " tabindex="0">
+			<label for="filestyle-{{showmodel}}" class="btn btn-default ">
+				<span class="icon-span-filestyle glyphicon glyphicon-folder-open"></span> 
+				<span class="buttonText">Выберите файл</span>
+			</label>
+		</span>
+	</div>
+</div>
+<div ng-hide="newFile" class='popup-load-img'>
+<!-- 	<i class="md md-clear pull-right" ng-click="deleteFile()"></i>
+	<div class="popup img-wrap">
+		<img ng-src="{{model}}">
+	</div> -->
+
+	<a role='button' class="flat-row">
+        <div class="onhover"></div>
+        <i class="md md-clear pull-right" ng-click="deleteFile()"></i>
+        <div class="img-wrapper p-10">
+          <img ng-src="{{showmodel}}">
+        </div>
+	</a>
+</div>
+
+

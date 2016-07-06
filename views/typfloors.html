@@ -1,0 +1,157 @@
+<!-- <div class="row">
+  <div class="col-xs-12">
+    <ol class="breadcrumb m-b-0">
+      <li><a href="#">Главная</a></li>
+      <li><a href="#">Проекты</a></li>
+      <li><a href="#">ЖК Победа</a></li>
+      <li class="active">Типовые этажи</li>
+    </ol>
+  </div>
+</div> -->
+
+<!-- floor -->
+<!-- header -->
+<div class="row page-header m-t-15">
+  <div class="col-xs-12 m-b-10">
+    <span ng-click='typfl.Mod.add()' data-toggle="modal" data-target="#myModal" class="btn btn-default pull-right">+ Добавить типовой этаж</span>
+    <h4 class="font-bold">Типовые этажи</h4>
+    <!-- <span ng-click='typfl.Mod.add()' data-toggle="modal" data-target="#myModal" class="btn btn-white btn-dotted btn-custom">Создать типовой этаж</span> -->
+
+  </div>
+</div>
+
+<div class="type-floor m-b-30 plansDndList" ng-repeat='floor in typfl.models.type_floors | orderBy: "-id"'>
+  <div class="row">
+    <div class="col-xs-12 m-b-10">
+      <span class="btn btn-grey btn-xs">{{floor.a_name}}</span>
+      <span class="btn btn-success btn-xs waves-effect" ng-show='typfl.editInThis(floor)' ng-click='typfl.saveEditIn(floor)'>Сохранить</span>
+      <span class="btn btn-danger btn-xs waves-effect" ng-show='typfl.editInThis(floor)' ng-click='typfl.cancelEditIn(floor)'>Сбросить</span>
+      <span class="btn btn-inverse btn-xs waves-effect" ng-hide='typfl.editInThis(floor)' ng-click='typfl.getEditIn(floor)'>Редактировать</span>
+      <i class="glyphicon glyphicon-trash" ng-hide='typfl.editInThis(floor)' ng-click='typfl.Mod.delet(floor)' data-toggle="modal" data-target="#myModal"></i>
+    </div>
+  </div>
+
+  <div class="row container-element">
+    <ul
+      dnd-list="floor.data"
+      dnd-horizontal-list="true"
+      dnd-allowed-types="typfl.getTypes(floor.data)"
+      class="itemlist"
+      >
+
+      <li
+        ng-repeat="plan in floor.data"
+        dnd-draggable="plan"
+        dnd-moved="floor.data.splice($index, 1)"
+        dnd-effect-allowed="move"
+        ng-class="{'selected': typfl.models.selected === plan}"
+        draggable="true"
+        dnd-disable-if='!typfl.editInThis(floor)'
+        dnd-type="plan.plan_id"
+        class='col-xs-2'
+        >
+          <div class="flat-row-container p-b-10">
+            <a role="button" class="flat-row">
+              <div class="onhover"></div>
+              <i class="md md-clear" ng-show='typfl.editInThis(floor)' ng-click='typfl.deletIn(floor,plan)'></i>
+              <div class="img-wrapper p-10">
+                <img ng-src="{{typfl.base_href}}{{typfl.dict_plans[plan.plan_id].plan_img}}" alt="">
+              </div>
+              <div class="text font-bold clearfix p-b-10">
+                <span class="pull-left">{{typfl.dict_plans[plan.plan_id].name}}</span>
+                <span class="pull-right">{{typfl.dict_plans[plan.plan_id].area}} м<sup>2</sup></span>
+              </div>
+              <!-- <a href="#change" class="change">Изменить</a> -->
+            </a>
+          </div>
+        </li>
+    </ul>
+    <div class="col-xs-2">
+      <span
+        ng-show='typfl.editInThis(floor)'
+        ng-click='typfl.ModPlans.getAddTo(floor)' data-toggle="modal" data-target="#plansModal"
+        class="btn btn-white btn-dotted btn-custom addnew">Добавить еще</span>
+    </div>
+  </div>
+</div>
+
+
+<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click='typfl.Mod.cancel()'>×</button>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='typfl.Mod.show("create")'>Создание типового этажа</h4>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='typfl.Mod.show("remove")'>Удаление типового этажа</h4>
+                </div>
+                <div class="modal-body" ng-hide='typfl.Mod.show("remove")'>
+                    <form class="form-horizontal" role="form" ng-show='typfl.Mod.show("create")'>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Название</label>
+                            <div class="col-sm-5"
+                                form-input
+                                type="typfl.Mod.data['name'].type"
+                                model="typfl.Mod.data['name'].value"
+                                list="typfl.Mod.data['name'].choices"
+                            >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body" ng-show='typfl.Mod.show("remove")'>
+                  Вы действительно хотите удалить типовой этаж "{{typfl.Mod.data['a_name'].value}}"?
+                </div>
+                <div class="row">
+                  <div class="col-xs-6 col-xs-offset-4">
+                    <button type="button" ng-show='typfl.Mod.show("create")' ng-click='typfl.Mod.create()' class="btn btn-success">Создать</button>
+                    <button type="button" ng-show='typfl.Mod.show("remove")' ng-click='typfl.Mod.remove()' class="btn btn-danger">Удалить</button>
+                    <button type="button" ng-click='typfl.Mod.cancel()' class="btn btn-white" data-dismiss="modal">Отмена</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="plansModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="plansModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click='typfl.ModPlans.cancel()'>×</button>
+                    <h4 class="modal-title" id="myModalLabel">Добавление планировок</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                      <table class="table m-0">
+                        <thead>
+                          <tr>
+                            <th>Название</th>
+                            <th>Площадь</th>
+                            <th colspan="3">Количество</th>
+                          </tr>
+                        </thead>
+                        <tbody ng-repeat="plans_by_rooms in typfl.plans | groupBy: 'rooms_count'">
+                          <tr class="active"><td colspan="5">{{typfl.rooms[plans_by_rooms[0].rooms_count].name}}</td></tr>
+                          <tr ng-repeat="plan in plans_by_rooms | orderBy: 'name' ">
+                            <td>{{plan.name}}</td>
+                            <td>{{plan.area}}</td>
+                            <td ng-click='typfl.ModPlans.removeFrom(plan)'><i class="md md-remove remove_plan"></i></td>
+                            <td>
+                              <strong ng-show="typfl.plansCount[plan.id]>0">{{typfl.plansCount[plan.id] || 0 }}</strong>
+                              <span ng-show="!typfl.plansCount[plan.id]">0</span>
+                            </td>
+                            <td ng-click='typfl.ModPlans.addTo(plan)'><i class="md md-add add_plan"></i></td>
+                          </tr>
+                      </tbody>
+                      </table>
+                      <!-- <div ng-repeat="plan in typfl.plans" >{{plan.name}}</div> -->
+                    </form>
+                </div>
+                <div class="row">
+                  <div class="col-xs-6 col-xs-offset-4">
+                    <button type="button" ng-click='typfl.ModPlans.createTo() && typfl.cancelEditIn()' class="btn btn-success">Добавить</button>
+                    <button type="button" ng-click='typfl.ModPlans.cancel()' class="btn btn-white">Отмена</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>

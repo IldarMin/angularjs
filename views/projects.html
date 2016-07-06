@@ -1,0 +1,301 @@
+<div class="row hidden-xs hidden-sm">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        <button class="pull-right btn btn-default" ng-click='proj.Mod.add()' data-toggle="modal" data-target="#myModal">+ Добавить проект</button>
+			<h4 class="text-dark">Проекты</h4>
+			<p class="text-muted">Жилые комплексы, находящиеся под управлением СолдКо</p>
+			<br><br>
+
+        	<table class="table table-striped">
+        		<thead>
+	        		<tr>
+	        			<th>Название проекта</th>
+	        			<th>Дата создания</th>
+	        			<th>Статус</th>
+	        			<th>Город</th>
+	        			<th>Редактирование</th>
+	        		</tr>
+        		</thead>
+        		<tbody>
+	        		<tr ng-repeat="project in proj.projects | orderBy: 'createdon' ">
+	        			<td>{{project.name}}</td>
+	        			<td>{{project.createdon | date:'dd.MM.yyyy HH:mm' }}</td>
+	        			<td>{{project.state.name}}</td>
+	        			<td>{{project.city.name}}</td>
+	        			<td>
+	        				<i class="md md-mode-edit" ng-click='proj.Mod.edit(project)' data-toggle="modal" data-target="#myModal"></i>
+	        				<i class="md md-close" ng-click='proj.Mod.delet(project)' data-toggle="modal" data-target="#myModal"></i>
+	        			</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 ng-show='proj.Mod.show("create")' class="modal-title" id="myModalLabel">Новый проект</h4>
+                    <p ng-show='proj.Mod.show("create")' class="text-muted">Заполните общие параметры создаваемого проекта.</p>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='proj.Mod.show("update")'>Редактирование проекта</h4>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='proj.Mod.show("remove")'>Удаление проекта</h4>
+                </div>
+                <div class="modal-body" ng-hide='proj.Mod.show("remove")'>
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Название</label>
+							<div class="col-sm-8"
+								form-input
+								type="proj.Mod.data['name'].type"
+								model="proj.Mod.data['name'].value"
+								list="proj.Mod.data['name'].choices"
+								errors="proj.Mod.data['name'].errors"
+							>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Город</label>
+							<div class="col-sm-8"
+								form-input
+								type="proj.Mod.data['city'].type"
+								model="proj.Mod.data['city'].value"
+								list="proj.Mod.data['city'].choices"
+								errors="proj.Mod.data['city'].errors"
+							>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Процент резерва</label>
+							<div class="col-sm-2"
+								form-input
+								type="proj.Mod.data['reserve_procent'].type"
+								model="proj.Mod.data['reserve_procent'].value"
+								list="proj.Mod.data['reserve_procent'].choices"
+								errors="proj.Mod.data['reserve_procent'].errors"
+
+							>
+							</div>
+
+							<label class="col-sm-2 control-label">Площадь</label>
+							<div class="col-sm-4"
+								form-input
+								type="proj.Mod.data['area'].type"
+								model="proj.Mod.data['area'].value"
+								list="proj.Mod.data['area'].choices"
+								errors="proj.Mod.data['area'].errors"
+							>
+							</div>
+
+						</div>
+
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Добавочный процент при рассрочке</label>
+							<div class="col-sm-2"
+								form-input
+								type="proj.Mod.data['installment_procent'].type"
+								model="proj.Mod.data['installment_procent'].value"
+								list="proj.Mod.data['installment_procent'].choices"
+								errors="proj.Mod.data['installment_procent'].errors"
+
+							>
+							</div>
+
+							<label class="col-sm-2 control-label">Ожидаемая сумма</label>
+							<div class="col-sm-4"
+								form-input
+								type="proj.Mod.data['profit'].type"
+								model="proj.Mod.data['profit'].value"
+								list="proj.Mod.data['profit'].choices"
+								errors="proj.Mod.data['profit'].errors"
+							>
+							</div>
+						</div>
+						<!-- ыер -->
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Процент 1 платежа</label>
+							<div class="col-sm-4"
+								form-input
+								type="proj.Mod.data['resale_first_reserve_procent'].type"
+								model="proj.Mod.data['resale_first_reserve_procent'].value"
+								list="proj.Mod.data['resale_first_reserve_procent'].choices"
+								errors="proj.Mod.data['resale_first_reserve_procent'].errors"
+
+							>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Процент 2 платежа</label>
+							<div class="col-sm-4"
+								form-input
+								type="proj.Mod.data['resale_second_reserve_procent'].type"
+								model="proj.Mod.data['resale_second_reserve_procent'].value"
+								list="proj.Mod.data['resale_second_reserve_procent'].choices"
+								errors="proj.Mod.data['resale_second_reserve_procent'].errors"
+							>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Промежуток между 1 и 2 платежом</label>
+							<div class="col-sm-4"
+								form-input
+								type="proj.Mod.data['resale_status_time'].type"
+								model="proj.Mod.data['resale_status_time'].value"
+								list="proj.Mod.data['resale_status_time'].choices"
+								errors="proj.Mod.data['resale_status_time'].errors"
+							>
+							</div>
+						</div>
+						<!-- ыер -->
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">ID счетчика метрики</label>
+							<div class="col-sm-8"
+								form-input
+								type="proj.Mod.data['metrika'].type"
+								model="proj.Mod.data['metrika'].value"
+								list="proj.Mod.data['metrika'].choices"
+								errors="proj.Mod.data['metrika'].errors"
+							>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label">Статус</label>
+							<div class="col-sm-8"
+								form-input
+								type="proj.Mod.data['state'].type"
+								model="proj.Mod.data['state'].value"
+								list="proj.Mod.data['state'].choices"
+								errors="proj.Mod.data['state'].errors"
+							>
+							</div>
+						</div>
+					</form>
+                </div>
+                <div class="modal-body" ng-show='proj.Mod.show("remove")'>
+                	Вы действительно ходите удалить проект "{{proj.Mod.data['name'].value}}"?
+                </div>
+                <div class="row">
+                  <div class="col-xs-8 col-xs-offset-3">
+                    <button type="button" ng-show='proj.Mod.show("create")' ng-click='proj.Mod.create()' class="btn btn-success">Создать проект</button>
+                    <button type="button" ng-show='proj.Mod.show("update")' ng-click='proj.Mod.update()' class="btn btn-success">Сохранить изменения</button>
+                    <button type="button" ng-show='proj.Mod.show("remove")' ng-click='proj.Mod.remove()' class="btn btn-danger">Удалить проект</button>
+                    <button type="button" ng-click='proj.Mod.cancel()' class="btn btn-white" data-dismiss="modal">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row m-b-3 hidden-lg hidden-md">
+	<div class="col-xs-12" id="project-btns"  style="margin-bottom: 25px;">
+		<button ng-class="{'btn-default':active.val == 'today'}" class="btn btn-white waves-effect col-xs-2">Сегодня</button>
+		<button ng-class="{'btn-default':active.val == 'yesterday'}" class="btn btn-white waves-effect col-xs-2">Вчера</button>
+		<button ng-class="{'btn-default':active.val == 'week'}" class="btn btn-white waves-effect col-xs-2">Неделя</button>
+		<button ng-class="{'btn-default':active.val == 'month'}" class="btn btn-white waves-effect col-xs-2">Месяц</button>
+		<button ng-class="{'btn-default':active.val == 'quarter'}" class="btn btn-white waves-effect col-xs-2">Квартал</button>
+		<button ng-class="{'btn-default':active.val == 'year'}" class="btn btn-white waves-effect col-xs-2">Год</button>
+	</div>
+</div>
+
+	<div id="projects_table" class="col-md-6 col-12" ng-repeat="project in proj.projects | orderBy: 'createdon'">
+		<div class="">
+			<div class="card-box p-1">
+				<table id="table{{$index}}" class="table m-b-0 new_table_all">
+					<thead>
+						<tr style="position: relative;">
+							<td class="project_name" colspan="6">
+								<a href="/change/project/{{project.id}}"><b>{{project.name}}</b></a>
+								<!-- <b>{{project.name}}</b> -->
+							</td>
+							<td class="hidden-sm hidden-xs project_status" colspan="2" style="line-height: 27px;">
+								<b>({{project.state.name}})</b>
+							</td>
+							<td class="hidden-lg hidden-md arrows" colspan="2">
+								<span class="arrow_down ion-ios7-arrow-down" ng-click="arrows($event)" ng-init="count=0"></span>
+								<span class="arrow_up ion-ios7-arrow-up" style="display: none;"></span>
+							</td>
+							<!-- <td colspan="1" style="border: none !important;">
+								<i class="md md-mode-edit" ng-click='proj.Mod.edit(project)' data-toggle="modal" data-target="#myModal"></i>
+								<i class="md md-close" ng-click='proj.Mod.delet(project)' data-toggle="modal" data-target="#myModal"></i>
+							</td> -->
+						</tr>
+						<tr class="hidden-lg hidden-md no_border_ever">
+							<td class="col-sm-2">
+								Посещ: <a href="#">{{1+1}}</a>
+							</td>
+							<td class="col-sm-2">
+								Звонки: <a href="#">{{1+1}}</a>
+							</td>
+							<td class="col-sm-2">
+								Брони: <a href="#">{{1+1}}</a>
+							</td>
+							<td class="col-sm-2">
+								Резервы: <a href="#">{{1+1}}</a>
+							</td>
+							<td class="col-sm-2">
+
+							</td>
+							<td class="col-sm-2">
+
+							</td>
+						</tr>
+						<tr>
+
+						</tr>
+						<tr class="hidden-sm hidden-xs hide_show">
+							<td style="border-left: 1px solid #ebeff2;">
+
+							</td>
+							<td ng-repeat="time in dash_block.times">
+								{{time.name}}
+							</td>
+						</tr>
+					</thead>
+					<tbody class="hidden-sm hidden-xs border_border">
+						<tr ng-repeat="time in dash_block_two.th">
+							<td>
+								{{time.name}}
+							</td>
+							<td>
+								{{1}}
+							</td>
+							<td>
+								{{2}}
+							</td>
+							<td>
+								{{3}}
+							</td>
+							<td>
+								{{4}}
+							</td>
+							<td>
+								{{5}}
+							</td>
+							<td>
+								{{6}}
+							</td>
+							<td>
+								{{7}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div style="margin-top: 20px; text-align: right;" class="hidden-sm hidden-xs">
+					<div>
+						<a href="" class="plan_p">План поступлений</a>
+						<a href="" class="a_project">Перейти в проект</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

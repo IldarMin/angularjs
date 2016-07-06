@@ -1,0 +1,19 @@
+<div class="bootstrap-select" ng-class='(invalid) ? "has-error" : "" '>
+  <input type="text" name="client" id="fio" class="form-control" autocomplete="off"
+  ng-model="model1"
+  ng-model-options="{debounce: { 'default': 500}}"
+  ng-click='clickInput1()'
+  ng-change='removeResult1()'
+  ng-disabled='disabled'>
+</div>
+<div class="very_long_fio open select-menu" ng-show='showSearchResult1()'>
+  <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+    <li ng-repeat='obj in listSearch1'>
+        <a ng-href="#/clients/{{obj.id}}" target="_blank" class="right_arrow"><i class="md-arrow-forward"></i></a>
+          <a tabindex="{{$index}}" class="long_fio" ng-click='pickObj1(obj)'>
+              <span class="text">{{obj.fio}}</span><br>
+              <span class="search_fio_grey">{{obj.phone}}</span>
+          </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,150 @@
+<div class="widget-bg-color-icon card-box">
+	<div class="row">
+		<div class="col-xs-8">
+			<div class="form-group">
+	    		<div class="row">
+	         		<div class="col-xs-12">
+	         			<label>Быстрый поиск по дате:</label>
+	         		</div>
+	            </div>
+	            <div class='row'>
+	            	<div class="col-xs-12" id="dash-btns">
+	            		<button ng-class="{'btn-default':active.val == 'today'}" class="btn btn-white waves-effect" ng-click='change_date("today")'>Сегодня</button>
+	            		<button ng-class="{'btn-default':active.val == 'yesterday'}" class="btn btn-white waves-effect" ng-click='change_date("yesterday")'>Вчера</button>
+	            		<button ng-class="{'btn-default':active.val == 'week'}" class="btn btn-white waves-effect" ng-click='change_date("week")'>Неделя</button>
+	            		<button ng-class="{'btn-default':active.val == 'month'}" class="btn btn-white waves-effect" ng-click='change_date("month")'>Месяц</button>
+	            		<button ng-class="{'btn-default':active.val == 'quarter'}" class="btn btn-white waves-effect" ng-click='change_date("quarter")'>Квартал</button>
+	            		<button ng-class="{'btn-default':active.val == 'year'}" class="btn btn-white waves-effect" ng-click='change_date("year")'>Год</button>
+	         		</div>
+	            </div>
+	        </div>
+		</div>
+	    <div class="col-xs-4 pull-right">
+	        <div class="form-group">
+	         	<div class="row">
+	         		<div class="col-xs-12">
+	         			<label>Фильтр по дате</label>
+	         		</div>
+	            </div>
+	            <div class="row">
+	            	<div class="col-xs-6">
+	            		<input type="text" class="form-control" placeholder="дд.мм.гг" ng-model="dash_date.from" jqdatepicker-callback>
+	            	</div>
+	            	<div class="col-xs-6">
+	            		<input type="text" class="form-control" placeholder="дд.мм.гг" ng-model="dash_date.to" jqdatepicker-callback>
+	            	</div>
+	            </div>
+	        </div>
+	    </div>
+		<div class="clearfix"></div>
+	</div>
+</div>
+
+<div class="card-box dash_block p-0">
+	<div class="row">
+		<div class="col-xs-12">
+			<table class="table m-b-0 new_table_all">
+			<!-- table-hover -->
+				<thead class="new_table_head">
+					<tr>
+						<td></td>
+						<td ng-repeat="time in dash_block.times" ng-class="{'active_time': dash_block.isActive(time.id), 'warning': time.id == 'all'}">
+							{{time.name}}
+						</td>
+						<td ng-show="!dash_block.active">
+							{{dash_date.from | date:'dd.MM.yyyy'}}-{{dash_date.to | date:'dd.MM.yyyy'}}
+						</td>
+					</tr>
+				</thead>
+				<tbody class="new_table">
+					<tr ng-repeat="entity in dash_block.entities">
+						<td>{{entity.name}}</td>
+						<td ng-repeat="time in dash_block.times" ng-class="{'active_time': dash_block.isActive(time.id), 'warning': time.id == 'all'}">
+							<a ng-href="{{getSref(entity, time)}}" class="underline filter-href" has-permission="auth.see_actions_journal|auth.see_contacts_journal">
+								{{dash_block.data[entity.id][time.id]}}
+							</a>
+						</td>
+						<td ng-show="!dash_block.active">
+							<!-- <a ui-sref="{{getCustom(entity, dash_date)}}" class="underline filter-href" has-permission="auth.see_actions_journal|auth.see_contacts_journal"> -->
+							<!-- <a ui-sref="{{getCustom(entity, dash_date)}}" class="underline filter-href" has-permission="auth.see_actions_journal|auth.see_contacts_journal"> -->
+							<a ng-href="{{getCustom(entity, dash_date)}}" class="underline filter-href" 
+							has-permission="auth.see_actions_journal|auth.see_contacts_journal">
+
+								{{sums[entity.id]}}
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- Charts:Beginning -->
+
+<div class="row">
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Сайт</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_contacts_site' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Звонки</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_contacts_call' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Посещения</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_contacts_visit' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Брони</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_reservations' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Резервы</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_reserves' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-4">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">Продано</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_sales' duration='day_duration'></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- <div class="row">
+	<div class="col-xs-12">
+		<div class="card-box">
+			<h4 class="m-t-0 m-b-20">
+				План поступлений: <span class='text-custom'>{{sums.payments.plans | price}}</span> руб.
+				Фактических оплат: <span class='text-custom'>{{sums.payments.payments | price}}</span> руб.
+			</h4>
+			<div>
+				<div style="height: 200px;" class="flot-chart" jq-flot-chart points='dash_payments' bars></div>
+			</div>
+		</div>
+	</div>
+</div> -->

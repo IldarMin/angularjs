@@ -1,0 +1,5 @@
+<div class="form-group" ng-repeat="item in list track by $index">
+	<input type="text" ng-model="list[$index]" class="form-control" placeholder="">
+	<i class="md md-clear" ng-click='multiInput.removeItem($index)'></i>
+</div>
+<div><i class="md md-add" ng-click='multiInput.addItem()'></i></div>

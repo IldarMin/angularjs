@@ -1,0 +1,90 @@
+<form class="form-calculator" action="">
+<div><label>Сумма кредита</label> <input name="sum" value="" placeholder="0" type="number"> <span class="space" id="resultCurrency">руб.</span></div>
+<div><label>Процентная ставка</label> <input name="percent" value="" placeholder="0" type="number"> <span class="form__input_meaning">%</span></div>
+<div><label>Срок кредита</label> <input name="period" value="" placeholder="0" type="number"> <span class="form__input_meaning">месяцев</span></div>
+<div class="paytype-block"><label class="paytype-caption">Вид платежа</label>
+<p><label><input name="paytype" value="annual" checked="checked" type="radio"> Аннуитетный<i><span>При аннуитетном порядке погашения ежемесячные выплаты равны в течение всего срока кредитования</span></i></label> <label><input name="paytype" value="diff" type="radio"> Дифференцированный<i><span>При дифференцированном порядке погашения ежемесячные выплаты уменьшаются в течение всего срока кредитования</span></i></label></p>
+</div>
+<div><label>Ежемесячные комиссии<i><span>Ежемесячные комиссии за обслуживание счета, за ведение счета, за пользование кредитом</span></i></label> <input name="finemonthly" value="" placeholder="0" type="number"> <select name="finemonthly_type"> <option value="sum" selected="selected">% от суммы кредита</option> <option value="debt">% от остатка задолженности</option> </select></div>
+<div><label>Единовременные комиссии<i><span>Единовременные комиссии за расчеты с продавцом (аккредитив, ячейка, перевод на счет продавца), за консультационные услуги и за юридическое сопровождение сделок с недвижимым имуществом, плата за снижение годовой процентной ставки, за рассмотрение заявки, за выдачу кредита</span></i></label> <input name="fineonce" value="" placeholder="0" type="number"> <select name="fineonce_type"> <option value="percent" selected="selected">% от суммы кредита</option> <option value="money">руб.</option> </select></div>
+<div class="calculator-total"></div>
+</form>
+
+$(function() {
+  function getPrice(sum, percent, period, paytype, finemonthly, finemonthlyType, fineonce, fineonceType) {
+    var percentDecimal = percent / 100;
+    var monthlyBasicPay = 0;
+    var monthlyPay = 0;
+    var monthlyResult = '';
+    var totalPay = 0;
+    var overPay = 0;
+    var diffPayArr = [];
+    var basicPayArr = [];
+    var monthlyIncrement = 0;
+    var debtDiffArr = [];
+    monthlyBasicPay = sum / period;
+    if(paytype === 'annual') {
+      monthlyPay = (sum * (percentDecimal / 12)) / (1 - 1 / Math.pow(1 + (percentDecimal / 12), period));
+      for(var i=1; i <= period; i++) {
+        diffPayArr.push(monthlyPay);
+      }
+    } else {
+      for(var i = 1; i <= period; i++) {
+        diffPayArr.push(monthlyBasicPay + (sum - ((i - 1)*(sum / period))) * (percentDecimal / 12));
+      }
+    }
+    if(finemonthly > 0) {
+      if(finemonthlyType === 'sum') {
+        diffPayArr = diffPayArr.map(function(num) {
+          return parseFloat(num) + parseFloat(sum * (finemonthly / 100));
+        });
+      } else {
+        for(var i=1; i <= period; i++) {
+          debtDiffArr.push((parseFloat(sum) - parseFloat(monthlyBasicPay * i)) * parseFloat(finemonthly / 100));
+        }
+        diffPayArr = diffPayArr.map(function(num, index) {
+          return parseFloat(num) + parseFloat(debtDiffArr[index]);
+        });
+      }
+    }
+    totalPay = diffPayArr.reduce(function(prev, cur){
+      return cur + prev;
+    });
+    if(fineonce > 0) {
+      if(fineonceType === 'percent') {
+        totalPay = Math.round(totalPay) + (sum * (fineonce / 100));
+      } else {
+        totalPay = totalPay + fineonce;
+      }
+    }
+    overPay = totalPay - sum;
+    if(diffPayArr[0] === diffPayArr[diffPayArr.length - 1]) {
+      monthlyResult = '' + Math.round(diffPayArr[0]);
+    } else {
+      monthlyResult = Math.round(diffPayArr[0]) + ' ... ' + Math.round(diffPayArr[diffPayArr.length - 1]);
+    }
+    return '<p><span>Р•Р¶РµРјРµСЃСЏС‡РЅС‹Рµ РїР»Р°С‚РµР¶Рё:</span>' + monthlyResult + ' СЂСѓР±.</p><p><span>РџРµСЂРµРїР»Р°С‚Р° РїРѕ РєСЂРµРґРёС‚Сѓ:</span>' + Math.round(overPay) + ' СЂСѓР±.</p><p><span>Р’С‹РїР»Р°С‚С‹ Р·Р° РІРµСЃСЊ СЃСЂРѕРє РєСЂРµРґРёС‚Р°:</span>' + Math.round(totalPay) + ' СЂСѓР±.</p>';
+  }
+
+  function calculation() {
+    var sum = parseInt($('.form-calculator input[name=sum]').val(), 10);
+    var percent = parseFloat($('.form-calculator input[name=percent]').val(), 10);
+    var period = parseInt($('.form-calculator input[name=period]').val(), 10);
+    var paytype = $('.form-calculator input[name=paytype]:checked').val();
+    var finemonthly = parseInt($('.form-calculator input[name=finemonthly]').val(), 10);
+    var finemonthlyType = $('.form-calculator select[name=finemonthly_type]').val();
+    var fineonce = parseInt($('.form-calculator input[name=fineonce]').val(), 10);
+    var fineonceType = $('.form-calculator select[name=fineonce_type]').val();
+    if(sum > 0 && percent > 0 && period > 0) {
+      $('.calculator-total').html(getPrice(sum, percent, period, paytype, finemonthly, finemonthlyType, fineonce, fineonceType));
+    }
+  }
+
+  $('.form-calculator select, .form-calculator input:radio, .form-calculator input[type=number]').change(function() {
+    calculation();
+  });
+  $('.form-calculator input[type=number]').on('input', function() {
+    calculation();
+  });
+
+});

@@ -1,0 +1,85 @@
+<div class="row">
+    <div class="col-xs-5">
+        <div class="widget">
+            <div class="widget-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="widget-bg-color-icon card-box">
+
+                        <a href="#/sales/edit/" class="btn btn-default pull-right m-t-10"
+                            has-permission="app_mediaplan.add_sales">
+                            <i class="fa fa-plus"></i> Добавить акцию 
+                        </a>
+                        <h4 class="text-dark">Акции</h4>
+                        <br><br>
+
+                        <table class="table">
+                            <thead>
+                                <th>Наименование/описание</th>
+                                <th>Срок</th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="sale in sales">
+                                    <td><b>{{sale.name}}</b><br/><em>{{sale.description}}</em></td>
+                                    <td>
+                                        <span ng-show="sale.from_date">
+                                            <nobr>{{sale.serialized.duration.from | date:'dd.MM.yyyy'}} - {{sale.serialized.duration.to | date:'dd.MM.yyyy'}}</nobr>
+                                        </span>
+                                        <span ng-show="!sale.from_date">бессрочная</span>
+                                    </td>
+                                    <td>
+                                        <nobr>
+                                            <a href="#/sales/edit/{{sale.id}}" style="color: #797979"
+                                                has-permission="app_mediaplan.change_sales">
+                                                <i class="md md-mode-edit"></i>
+                                            </a>
+                                            <i class="md md-close button-action" data-toggle="modal" data-target="#deletSale" ng-click='modal.deletSale(sale)'
+                                                has-permission="app_mediaplan.delete_sales">
+                                            </i>
+                                        </nobr>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-7">
+        <div class="card-box">
+            <div id="calendar" jqcalendar ng-model='events'></div>
+        </div>
+    </div>
+</div>
+
+
+<div id="deletSale" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">Удаление акции</h4>
+                </div>
+                <br>
+                <div>
+                    Вы действительно ходите удалить акцию "{{modal.sale.name}}"?
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-lg-8 col-lg-offset-3">
+                    <button type="button" ng-click='modal.remove()' class="btn btn-danger">Удалить акцию</button>
+                    <button type="button" ng-click='modal.cancel()' class="btn btn-white" data-dismiss="modal">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="/assets/plugins/moment/moment.js"></script>
+<script src='/assets/plugins/fullcalendar/dist/fullcalendar.min.js'></script>
+<script src='/assets/plugins/fullcalendar/dist/lang/ru.js'></script>

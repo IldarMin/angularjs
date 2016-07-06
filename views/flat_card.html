@@ -1,0 +1,1177 @@
+<div class="content room">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <div class="row">
+      <div class="col-sm-12">
+        <ol class="breadcrumb">
+          <li><a href="#/buildings/{{flat.building.id}}/sections/">{{flat.building.name}}</a></li>
+          <li><a href="#/buildings/{{flat.building.id}}/sections/{{flat.section.id}}">БС {{flat.section.number}}({{flat.section.entrance}})</a></li>
+          <li class="active">Квартира №{{flat.number}}</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row ">
+
+      <div class="card-box">
+
+        <!-- header -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row page-header m-t-0">
+
+              <div class="col-xs-6">
+                <h4 class="m-t-0"><b>Квартира №{{flat.number}}, БС  {{flat.section.number}}({{flat.section.entrance}}), этаж {{flat.floor.number}}</b></h4>
+                <!-- <div class="col-xs-3 p-l-0"><a href="#">редактировать</a></div> -->
+                <!-- <div class="col-xs-9 p-l-0"><a href="#">найти похожие</a></div> -->
+              </div>
+
+              <div class="col-xs-6 text-right" ng-show="!!flat.status">
+                <h4 class="m-t-0" ng-class="{'text-danger': isOverdue(flat.status_time, flat.status.possible_delay && flat.state.possible_delay)}">
+                  <i class="md md-brightness-1 circle icon status" ng-class="flat.status.classx"></i>
+                  <b><span>Этап: {{flat.status.name}}</span></b>
+                </h4>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- content -->
+        <div class="row">
+
+          <div class="col-xs-3">
+            <div class="row">
+              <div class="col-sm-12 p-l-0">
+                <div class="thumbnail" style="min-height: 30px;">
+                  <span class="button-action" style="position: absolute; right: 20px;"
+                    ng-click="imageEdit.change('plan', flat.plan_img, flat.plan.plan_img)"
+                    ng-class="{'non-permission': isntLeaders()}" has-permission="app_nedv.change_flats">
+                    <i class="md md-mode-edit"></i>
+                  </span>
+                  <a role="button" ng-click="modal.showImg(flat.plan_img, flat.plan.plan_img)" data-toggle="modal" data-target="#modalImg">
+                    <img ng-src="{{flat.plan_img || flat.plan.plan_img}}" alt="" class="img-responsive thumb-room">
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12 p-l-0">
+                <div class="thumbnail" style="min-height: 30px;">
+                  <span class="button-action" style="position: absolute; right: 20px;"
+                    ng-click="imageEdit.change('floor', flat.floor_img, flat.plan.floor_img)"
+                    ng-class="{'non-permission': isntLeaders()}" has-permission="app_nedv.change_flats">
+                    <i class="md md-mode-edit"></i>
+                  </span>
+                  <a role="button" ng-click="modal.showImg(flat.floor_img, flat.plan.floor_img)" data-toggle="modal" data-target="#modalImg">
+                    <img ng-src="{{flat.floor_img || flat.plan.floor_img}}" alt="" class="img-responsive thumb-room">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-9">
+
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="main-info-table">
+                  <tbody>
+                    <tr>
+                      <!-- <td ng-mouseenter="costEdit.mouseEnter()" ng-mouseleave="costEdit.mouseLeave()" style="min-width: 240px;"> -->
+                      <td>
+                        <span class="title">цена при 100% оплате</span>
+                        <br>
+                        <span class="subtitle">{{flat.price | price}}</span>
+
+                      <!--<span class="subtitle" ng-show="costEdit.mode=='view'">{{flat.price | price}}</span>
+                        <span class="pull-right button-action"
+                          ng-show="costEdit.showPencil && costEdit.mode=='view' && !isFreeze()"
+                          ng-click="costEdit.setEdit(flat.price)"
+                          has-permission="app_nedv.change_flats"
+                          style="line-height: 36px">
+                          <i class="md md-mode-edit" style="position: absolute"></i>
+                        </span>
+                        <span class="editable-container editable-inline">
+                            <div class="control-group form-group m-b-0 col-xs-12 p-l-0" ng-if="costEdit.mode=='edit'" style="padding-right: 0;">
+                              <div class="col-xs-6 p-l-0">
+                                <input autonumber="price" ng-model="costEdit.model" type="text" class="form-control input-sm" style="min-width: 75px; text-align: center;">
+                              </div>
+                              <div class="editable-buttons">
+                                <button type="button" class="btn btn-success btn-sm" ng-click="costEdit.saveEdit()"><i class="md md-done"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="costEdit.cancelEdit()"><i class="md md-clear"></i></button>
+                              </div>
+                              <div class="col-xs-12">
+                                <ul class="parsley-errors-list filled m-t-0" ng-show="costEdit.error">
+                                  <li class="parsley-required">
+                                    Ошибка при сохранении
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div ng-show="costEdit.mode=='load'"></div>
+                        </span> -->
+
+                      </td>
+                      <td ng-if="flat.super_price>0">
+                        <span class="title">цена с максимальной скидкой</span>
+                        <br>
+                        <span class="subtitle">{{flat.super_price | price}}</span>
+                      </td>
+                      <td>
+                        <span class="title">планировка</span>
+                        <br>
+                        <span class="subtitle">{{flat.plan.name}}</span>
+                      </td>
+                      <td>
+                        <span class="title">площадь</span>
+                        <br>
+                        <span class="subtitle">{{flat.area}} м<sup>2</sup></span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-sm-4">
+                <table class="table table-bordered about-flat">
+                  <thead>
+                    <tr>
+                      <th colspan="2">Информация о квартире</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td>Общая площадь</td>
+                      <td>
+                        <a role="button" ng-hide="costEditTable.editnow=='area'" ng-click="costEditTable.edit(flat.area, 'area')" class="price-editor"
+                        ng-class="{'non-permission': isntLeaders()}" has-permission="app_nedv.change_flats">
+                        {{flat.area}}</a>
+                        <span class="editable-container editable-inline" ng-if="costEditTable.editnow=='area'">
+                            <div class="control-group form-group m-b-0 col-xs-12 p-l-0" style="padding-right: 0;">
+                              <div class="col-xs-6 p-l-0">
+                                <input ng-model="costEditTable.model" type="text" class="form-control input-sm" style="min-width: 75px; text-align: center;">
+                              </div>
+                              <div class="editable-buttons" ng-hide="costEditTable.load">
+                                <button type="button" class="btn btn-success btn-sm" ng-click="costEditTable.saveEdit('area')" ng-disabled="costEditTable.isSame('area')">
+                                <i class="md md-done"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="costEditTable.cancelEdit()"><i class="md md-clear"></i></button>
+                              </div>
+                              <div ng-show="costEditTable.load"><img src="assets/images/preloader_small.gif"  alt="" ></div>
+                              <div class="col-xs-12">
+                                <ul class="parsley-errors-list filled m-t-0" ng-show="costEditTable.error">
+                                  <li class="parsley-required">
+                                    Ошибка при сохранении
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                        </span>
+
+
+                      </td>
+                    </tr>
+                    <tr ng-if="!!flat.plan.jil_area || !!flat.area_detailed.jil_area">
+                      <td>Жилая площадь</td>
+                      <!-- <td>{{flat.plan.jil_area}}</td> -->
+                      <td>{{exactArea(flat.plan.jil_area , flat.area_detailed.jil_area)}}</td>
+                    </tr>
+                    <tr ng-if="showArrRooms(flat.plan.balcons) || !!flat.area_detailed.balcons">
+                      <td>Балкон</td>
+                      <td>{{exactArea((flat.plan.balcons | roomsArea), flat.area_detailed.balcons)}}</td>
+                    </tr>
+                    <tr ng-if="showArrRooms(flat.plan.loggia) || !!flat.area_detailed.loggia">
+                      <td>Лоджия</td>
+                      <td>{{exactArea((flat.plan.loggia | roomsArea), flat.area_detailed.loggia)}}</td>
+                    </tr>
+                    <tr ng-if="showArrRooms(flat.plan.kitchens)">
+                      <td>Кухня</td>
+                      <td>{{flat.plan.kitchens | roomsArea}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="col-sm-8">
+                <table class="table price-table">
+                  <thead>
+                    <tr>
+                      <th>Стоимость квартиры</th>
+                      <th>Кв. метр</th>
+                      <th>Общая</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>В рассрочку</td>
+                      <td>{{Math.round(flat.installment_price/flat.area) | price}} руб</td>
+                      <td>{{flat.installment_price | price}} руб</td>
+                    </tr>
+                    <tr>
+                      <td>При 100% оплате</td>
+                      <td>
+                        <a role="button"
+                        ng-hide="costEditTable.editnow=='cost' || costEditTable.editnow=='price'"
+                        ng-click="costEditTable.edit(flat.price/flat.area, 'price')" class="price-editor"
+                        ng-class="{'non-permission': hasntSpecial()}" has-permission="app_nedv.change_flats">
+                        {{Math.round(flat.price/flat.area) | price}} руб
+                        </a>
+                        <span ng-if="costEditTable.editnow=='cost'">{{Math.round(costEditTable.model/flat.area) | price}}</span>
+                        <span class="editable-container editable-inline" ng-if="costEditTable.editnow=='price'">
+                            <div class="control-group form-group m-b-0 col-xs-12 p-l-0" style="padding-right: 0;">
+                              <div class="col-xs-6 p-l-0">
+                                <input ng-model="costEditTable.model" type="text" class="form-control input-sm" autonumber="price" style="min-width: 75px; text-align: center;">
+                              </div>
+                              <div class="editable-buttons" ng-hide="costEditTable.load">
+                                <button type="button" class="btn btn-success btn-sm" ng-click="costEditTable.saveEdit()" ng-disabled="costEditTable.isSame()"><i class="md md-done"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="costEditTable.cancelEdit()"><i class="md md-clear"></i></button>
+                              </div>
+                              <div ng-show="costEditTable.load"><img src="assets/images/preloader_small.gif"  alt="" ></div>
+                              <div class="col-xs-12">
+                                <ul class="parsley-errors-list filled m-t-0" ng-show="costEditTable.error">
+                                  <li class="parsley-required">
+                                    Ошибка при сохранении
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                        </span>
+                      </td>
+
+                      <td>
+                        <a role="button" ng-hide="costEditTable.editnow=='cost' || costEditTable.editnow=='price'"
+                        ng-click="costEditTable.edit(flat.price, 'cost')" class="price-editor"
+                        ng-class="{'non-permission': hasntSpecial()}" has-permission="app_nedv.change_flats">
+                        {{flat.price | price}} руб</a>
+                        <span ng-if="costEditTable.editnow=='price'">{{costEditTable.model*flat.area | price}}</span>
+                        <span class="editable-container editable-inline" ng-if="costEditTable.editnow=='cost'">
+                            <div class="control-group form-group m-b-0 col-xs-12 p-l-0" style="padding-right: 0;">
+                              <div class="col-xs-6 p-l-0">
+                                <input ng-model="costEditTable.model" type="text" class="form-control input-sm" autonumber="price" style="min-width: 75px; text-align: center;">
+                              </div>
+                              <div class="editable-buttons" ng-hide="costEditTable.load">
+                                <button type="button" class="btn btn-success btn-sm" ng-click="costEditTable.saveEdit()" ng-disabled="costEditTable.isSame()"><i class="md md-done"></i></button>
+                                <button type="button" class="btn btn-danger btn-sm" ng-click="costEditTable.cancelEdit()"><i class="md md-clear"></i></button>
+                              </div>
+                              <div ng-show="costEditTable.load"><img src="assets/images/preloader_small.gif"  alt="" ></div>
+                              <div class="col-xs-12">
+                                <ul class="parsley-errors-list filled m-t-0" ng-show="costEditTable.error">
+                                  <li class="parsley-required">
+                                    Ошибка при сохранении
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr class="discount" ng-show='!!flat.super_price'>
+                      <td>Стоимость с учетом всех акций</td>
+                      <td><strong>{{Math.round(flat.super_price/flat.area) | price}} руб</strong></td>
+                      <td><strong>{{flat.super_price | price}} руб</strong></td>
+                    </tr>
+                    <tr>
+                      <td> - Стоимость резерва</td>
+                      <td></td>
+                      <td>{{flat.reserve_price | price}} руб</td>
+                    </tr>
+                    <tr>
+                      <td> - Стоимость по ДДУ</td>
+                      <td></td>
+                      <td>{{flat.ddu_price | price}} руб</td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#changeSales"
+                          ng-show="!isFreeze()"
+                          has-permission="app_mediaplan.change_salesinflats">Изменить акции</button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#changeSales"
+                          ng-show="isFreeze()">Посмотреть акции</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-xs-6">
+            <div class="row">
+              <div class="panel panel-default state-panel">
+                <div class="panel-heading">Тип продажи квартиры и этапы</div>
+                  <div ng-show='!preloader.statuses' class="panel-body">
+                    <form class="form-horizontal" name='status'>
+
+                      <!-- текущее состояние -->
+                      <div class="form-group state-group">
+                        <label for="state" class="col-xs-4 control-label">Тип продажи</label>
+                        <div class="col-xs-8">
+                            <div
+                                one-select-status
+                                type="'state'"
+                                list='states'
+                                model='ch_state'
+                                disabled='!stateBlock.isEdit'
+                                has-permission="app_nedv.change_flatstates"
+                              ></div>
+                        </div>
+                        <div class="col-xs-3">
+                        </div>
+                      </div>
+                      <!-- назначить этап -->
+                      <div class="form-group status-group">
+                        <label for="status" class="col-xs-4 control-label">Этап</label>
+                        <div class="col-xs-8">
+                            <div
+                              one-select-status
+                              type="'status'"
+                              list='dict_include[ch_state.id]'
+                              model='ch_status'
+                              disabled='!stateBlock.isEdit'
+                              invalid='invalid.ch_status'
+                              onchanged='watchStatus(par)'
+                              is-show='isInAfter(obj)'
+                              >
+                            </div>
+                        </div>
+                        <div class="col-xs-8 col-xs-offset-4 m-t-5" ng-show="!!flat.status_update_time">
+                          <em class="col-lg-12 col-sm-12 col-xs-12">Установлен: {{flat.status_update_time | date:'dd.MM.yyyy'}}</em>
+                          <em class="col-lg-12 col-sm-12 col-xs-12">Менеджер: {{users[flat.user].name}}</em>
+                        </div>
+                      </div>
+                     <div class="form-group" ng-show="!!ch_status.show_contract">
+                         <label for="status" class="col-xs-4 control-label">Тип договора</label>
+                         <div class="col-xs-6">
+                            <div
+                                one-select
+                                model='ch_status_types'
+                                list='status_types_all[ch_state.id]'
+                                disabled="!stateBlock.isEdit"
+                                invalid='invalid.ch_status_types'
+                                >
+                            </div>
+                         </div>
+                    </div>
+                    <div class="form-group m-t-10" style="margin-top: -10px;" ng-show="ch_status.possible_delay">
+                        <label for="status" class="col-xs-4 control-label">Дата окончания этапа</label>
+                        <div class="col-xs-3" ng-class='(invalid.ch_status_time) ? "has-error" : "" '>
+                          <input type="text" class="form-control" placeholder="дд.мм.гг"
+                            jqdatepicker
+                            ng-model='ch_status_time'
+                            ng-disabled="!stateBlock.isEdit || isNoneStatus()"
+                            invalid='invalid.ch_status_time'
+                            >
+                        </div>
+                      </div>
+
+                      <div class="form-group" style="margin-top: -10px;" ng-show="ch_status.id == 24">
+                        <label for="status" class="col-xs-4 control-label">Дата регистрации</label>
+                        <div class="col-xs-3 m-t-10"
+                            ng-class='(invalid.ch_registration_date) ? "has-error" : "" '>
+                            <input type="text" class="form-control" placeholder="дд.мм.гг"
+                              jqdatepicker
+                              ng-model='ch_registration_date'
+                              ng-disabled="!stateBlock.isEdit || isNoneStatus()"
+                              invalid='invalid.ch_registration_date'
+                              >
+                        </div>
+                      </div>
+                      <div ng-show="flat.reserve_contract && !isNoneStatus()" class="form-group">
+                        <label for="status" class="col-xs-4 control-label">Договор резерва</label>
+                         <div class="col-xs-6 m-t-5">{{flat.reserve_contract.name}}</div>
+                      </div>
+
+                      <div>
+                      <!-- <div class="form-group">
+                          <label for="client" class="col-xs-4 control-label">Телефон клиента</label>
+                          <div class="col-xs-8">
+                              <div
+                                input-search
+                                model='phone'
+                                list='clientsList'
+                                result='result'
+                                disabled='!stateBlock.isEdit'
+                                invalid='invalid.result'
+                                ></div>
+                          </div>
+                        </div> -->
+                        <div class="form-group">
+                          <label for="client" class="col-xs-4 control-label">ФИО клиента</label>
+                          <div class="col-xs-8">
+                            <div class="col-xs-12" style="margin-left: -10px;">
+                              <div
+                                input-search-fio
+                                model='fio'
+                                list='clientsList'
+                                result='result'
+                                disabled='!stateBlock.isEdit'
+                                invalid='invalid.result'
+                                additem='fastContact.addClient()'
+                              ></div>
+                            </div>
+                            <p class="text-muted font-13"><a href="#/clients/{{result.id}}" ng-show="!!result" target="_blank">перейти в карточку клиента</a></p>
+                            <p class="font-15" ng-show="!!result">{{result.phone}}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Этапы оформления      ('false' && ch_statuses_stages.length>0 && stateBlock.realStatus)-->
+                      <div class="form-group etaps-group" ng-show="" style="display: none;">
+                        <label for="client" class="col-xs-4 control-label">Этапы оформления</label>
+                        <div class="col-xs-8">
+                          <table class="table">
+                            <tbody>
+                              <tr ng-repeat="round in ch_statuses_stages | orderBy: 'queue'  ">
+                                <td>
+                                    <div class="row">
+                                      <div class="col-xs-8">
+                                        <div class="checkbox">
+                                          <input id="{{round.id}}" type="checkbox"
+                                            ng-model='round.status'
+                                            ng-checked='round.status'
+                                            ng-disabled='!round.editable || !stateBlock.isEdit'
+                                          >
+                                          <label for="{{round.id}}">
+                                            {{round.text}} {{round.id}}
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div class="col-xs-4 text-right" ng-show='round.status && !!round.date && !round.editable'>
+                                        <p>до {{round.date | date:'dd.MM.yyyy'}}</p>
+                                      </div>
+                                    </div>
+                                    <div class="row m-b-10 m-t-15" ng-if='round.status && round.editable'>
+                                      <div class="col-xs-4">
+                                        <input type="text" class="form-control" placeholder="дд.мм.гг" id="datepicker"
+                                          jqdatepicker
+                                          ng-model='round.date'
+                                          >
+                                      </div>
+                                      <div class="col-xs-8">
+                                        <!-- <a role="button" class='btn btn-link' ng-click='addCommentCheckbox()'>Добавить комментарий</a> -->
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                      </div>
+                      </div>
+                      <div class="col-xs-offset-4 col-xs-6 clearfix" has-permission="app_nedv.change_flatstates|app_nedv.change_flatstatuses">
+                        <button ng-hide='stateBlock.isEdit' type="button" class="btn btn-default" ng-click="editStatus()">Изменить</button>
+                        <button ng-show='stateBlock.isEdit' type="button" class="btn btn-success" ng-click="changeStatus()">Cохранить</button>
+                        <button ng-show='stateBlock.isEdit' type="button" class="btn btn-white" ng-click="cancelStatus()">Отменить</button>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div class="preloader_center" ng-show='preloader.statuses'>
+                    <img src="assets/images/preloader.gif"  alt="" >
+                  </div>
+              </div>
+            </div>
+
+            <div class="row m-t-20">
+              <div class="panel panel-default comment-panel">
+                <div class="panel-heading"
+                  ng-click="panel.setActive('comments')"
+                  ng-class="panel.getClass('comments')"><b>Комментарии</b></div>
+                <div class="panel-heading"
+                  ng-show="isAblePayment"
+                  ng-click="panel.setActive('payments')"
+                  ng-class="panel.getClass('payments')"><b>Платежи</b></div>
+                <div class="panel-heading"
+                  ng-click="panel.setActive('deal')"
+                  ng-class="panel.getClass('deal')"><b>Сделка</b></div>
+
+                <div class="clearfix"></div>
+                <div class="panel-body card-box">
+                  <div>
+
+                    <div ng-show="panel.isActive('comments')">
+                      <div class="form-group m-t-10" has-permission="app_nedv.add_flatcomments">
+                        <div class='row m-b-10'>
+                          <div class="col-md-3 m-t-10">
+                            <b>Комментарий</b>
+                          </div>
+                          <div class="col-md-9">
+                            <textarea class="form-control" rows="0" ng-model="comment" style="min-height: 60px;"></textarea>
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class="col-md-2 col-md-offset-3">
+                            <button type='button' class="btn btn-success" ng-click="addComment()">Добавить</button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div ng-repeat="comment in comments | orderBy: 'createdon'" class="row m-b-30">
+                        <div class="col-md-3">
+                          <div class="text-muted m-b-10">{{comment.createdon | date:'dd.MM.yyyy HH:mm'}}</div>
+                        </div>
+                        <div class="col-md-9">
+                          <i class="md md-close pull-right button-action" ng-click="deleteComment(comment)" has-permission="app_nedv.delete_flatcomments"></i>
+                          <!-- <b>{{comment.user}}</b><br> -->
+                          <b>{{users[comment.user].first_name}} {{users[comment.user].last_name}}:</b><br>
+                            {{comment.comment}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div ng-show="panel.isActive('deal')">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Дата</th>
+                            <th>Клиент</th>
+                            <th>Роль</th>
+                            <th>Менеджер</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="person in deal">
+                            <td>{{person.createdon | date:'dd.MM.yyyy'}}</td>
+                            <td><a href="#/clients/{{person.client}}">{{clients[person.client].fio}}</a></td>
+                            <td>{{person.role}}</td>
+                            <td>{{users[person.user].first_name}} {{users[person.user].last_name}}</td>
+                            <td><i class="md md-close pull-right button-action" data-toggle="modal" data-target="#changeDeal"
+                              ng-click="modal.deleteFromDeal(person)"
+                              has-permission="app_nedv.delete_deals"></i></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <button type='button' class="btn btn-success pull-right" data-toggle="modal" data-target="#changeDeal"
+                        ng-click="modal.addToDeal()"
+                        has-permission="app_nedv.add_deals">Добавить участника</button>
+                    </div>
+
+                    <div ng-show="panel.isActive('payments')">
+                      <!-- платежи за резерв  ng-if="reserve_payment != null"-->
+                      <div>
+                        <table class="payments_table table table-striped" ng-show="reserve_payments.length>0">
+                            <tbody>
+                                <tr ng-repeat="reserve in reserve_payments" class="gradeX">
+                                    <td>
+                                        Резерв
+                                    </td>
+                                    <td>
+                                        <span ng-hide="addPayment.isEdit($index)" class="move_right">{{reserve.amount | price }} руб.</span>
+                                        <input class="form-control input-block" autonumber="price"
+                                        type="text"
+                                        ng-model="addPayment.model.amount"
+                                        ng-show="addPayment.isEdit($index)">
+                                    </td>
+                                    <td>
+                                        <span ng-hide="addPayment.isEdit($index)" class="move_right">{{reserve.fakt_date | date:'dd.MM.yyyy'}}</span>
+                                        <input type="text" class="form-control input-block"
+                                        jqdatepicker
+                                        ng-model="addPayment.model.fakt_date"
+                                        ng-show="addPayment.isEdit($index)">
+                                    </td>
+                                    <td class="actions" align="center" style="width: 70px;">
+                                      <span ng-hide="addPayment.isEdit($index)">
+                                        <a role='button' class="on-default edit-row"
+                                          has-permission="app_nedv.change_payments"
+                                          ng-class="{'editIn-disabled': addPayment.isAdd}"
+                                          ng-click="addPayment.edit(reserve, $index)">
+                                          <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a role='button' ng-click='addPayment.delet(reserve, $index)' class="">
+                                        <i class="glyphicon glyphicon-trash"></i></a>
+                                   </span>
+                                      <span ng-show="addPayment.isEdit($index)">
+                                        <a role='button' ng-click="addPayment.save(reserve, $index)" class="on-editing save-row"><i class="glyphicon glyphicon-ok"></i></a>
+                                        <a role='button' ng-click="addPayment.cancel()" class="on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                      </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div ng-show="reserve_payments.length==0">
+                          <i>Не указаны платежи по резерву</i>
+                          <br><br>
+                        </div>
+                        <button
+                            id="addToTable"
+                            ng-click="addPayment.add()"
+                            class="btn btn-success"
+                            ng-hide='addPayment.isAdd || (!!addPayment.editNow || addPayment.editNow===0)'
+                            has-permission="app_nedv.change_payments">
+                            Добавить платеж
+                        </button>
+                        <br>
+                        <br>
+                        <br>
+                      </div>
+
+                      <div class="m-b-30">
+                        <div class="radio radio-primary radio-inline">
+                            <input id="checkboxUsual" type="radio"
+                              ng-model="paymentsBlock.active"
+                              ng-value="'usual'"
+                              ng-change="editIn.cancel()"
+                              ng-disabled="paymentsBlock.disabledRadio('payments')"
+                            ><label for="checkboxUsual">Обычный</label>
+                        </div>
+                        <div class="radio radio-primary radio-inline m-r-10">
+                          <input id="checkboxInstallments" type="radio"
+                            ng-model="paymentsBlock.active"
+                            ng-value="'installments'"
+                            ng-change="editIn.cancel()"
+                            ng-disabled="paymentsBlock.disabledRadio('installments_payments')"
+                          ><label for="checkboxInstallments">По рассрочке</label>
+                        </div>
+                      </div>
+
+                      <div ng-if="paymentsBlock.active=='usual'">
+                        <table class="payments_table_one table table-striped" id="datatable-editable" ng-show="payments && payments.length>0">
+                          <thead>
+                              <tr>
+                                  <th>№</th>
+                                  <th>Сумма</th>
+                                  <th>План. дата</th>
+                                  <th>Факт. дата</th>
+                                  <th></th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr class="gradeX" ng-repeat="payment in payments | orderBy: 'id' track by $index">
+                                  <td>{{$index+1}}</td>
+                                  <td>
+                                      <span ng-hide="editIn.isEdit($index)"><nobr>{{payment.amount | price}} руб.</nobr></span>
+                                      <input class="form-control input-block" autonumber="price"
+                                      type="text"
+                                      ng-model="editIn.model.amount"
+                                      ng-show="editIn.isEdit($index)">
+                                  </td>
+                                  <td>
+                                      <span ng-hide="editIn.isEdit($index)">{{payment.date | date:'dd.MM.yyyy'}}</span>
+                                      <input type="text" class="form-control input-block"
+                                      jqdatepicker
+                                      ng-model="editIn.model.date"
+                                      ng-show="editIn.isEdit($index)">
+                                  </td>
+
+                                  <td>
+                                      <span ng-hide="editIn.isEdit($index)">{{payment.fakt_date | date:'dd.MM.yyyy'}}</span>
+                                      <input type="text" class="form-control input-block"
+                                      jqdatepicker
+                                      ng-model="editIn.model.fakt_date"
+                                      ng-show="editIn.isEdit($index)">
+                                  </td>
+
+                                  <td class="actions" align="center" style="min-width: 70px; line-height: 31px;">
+                                    <span ng-hide="editIn.isEdit($index)">
+                                      <a role='button' class="on-default edit-row"
+                                        has-permission="app_nedv.change_payments"
+                                        ng-class="{'editIn-disabled': editIn.isAdd}"
+                                        ng-click="editIn.edit(payment, $index)">
+                                        <i class="fa fa-pencil"></i>
+                                      </a>
+                                      <a role='button' class="on-default remove-row"
+                                        ng-click="editIn.delet(payment, $index)"
+                                        has-permission="app_nedv.delete_payments"
+                                        ng-class="{'editIn-disabled': editIn.isAdd}">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                      </a>
+                                    </span>
+
+                                    <span ng-show="editIn.isEdit($index)">
+                                      <a role='button' ng-click="editIn.save(payment, $index)" class="on-editing save-row"><i class="glyphicon glyphicon-ok"></i></a>
+                                      <a role='button' ng-click="editIn.cancel()" class="on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                    </span>
+                                  </td>
+                              </tr>
+                              <tr class="warning" ng-show="!!flat.status.contract_price">
+                                <td></td>
+                                <td colspan="4">
+                                  <b>Всего выплачено: {{Math.round(paymentsBlock.done_full) | price}}</b>
+                                </td>
+                              </tr>
+                              <tr class="warning" ng-show="!!flat.status.contract_price">
+                                <td></td>
+                                <td colspan="4">
+                                  <b>Остаток: {{Math.round(flat.status.contract_price -  paymentsBlock.done_full) | price}}</b>
+                                </td>
+                              </tr>
+                          </tbody>
+                        </table>
+                        <button
+                          id="addToTable" class="btn btn-success"
+                          ng-click='editIn.add()'
+                          ng-hide='editIn.isAdd || (!!editIn.editNow || editIn.editNow===0)'
+                          has-permission="app_nedv.add_payments"
+                          >
+                            Добавить платеж
+                        </button>
+                      </div>
+
+                      <div ng-if="paymentsBlock.active=='installments'">
+                        <div ng-hide='paymentsBlock.calculated' has-permission="app_nedv.add_payments">
+                          <h4>Калькулятор платежей</h4>
+                          <table class="table table-striped" id="datatable-editable">
+                            <thead>
+                              <tr>
+                                <th>Стоимость по рассрочке</th>
+                                <th>Первый взнос</th>
+                                <th>Срок, мес</th>
+                                <th>Дата первого платежа</th>
+                                <th>Дата всех платежей</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="gradeX">
+                                <td>{{getPriceForCalculate() | price}} руб. </td>
+                                <td>
+                                  <input type="text" class="form-control" autonumber="price"
+                                    ng-model="paymentsBlock.installments.source.first_amount">
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control"
+                                    ng-model="paymentsBlock.installments.source.month_count">
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control" placeholder="дд.мм.гг"
+                                    jqdatepicker
+                                    ng-model="paymentsBlock.installments.source.first_day">
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control" placeholder="дд.мм.гг"
+                                    jqdatepicker
+                                    ng-model="paymentsBlock.installments.source.day">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <button type='button' class="btn btn-success" ng-click="paymentsBlock.installments.calculate()">Расчитать платежи</button>
+                        </div>
+
+                        <div class="m-t-30" ng-show="paymentsBlock.calculated">
+                          <h4>Детализация по платежам</h4>
+                          <table class="payments_table table table-striped" id="datatable-editable">
+                            <thead class="">
+                              <tr>
+                                <th>№</th>
+                                <th>Сумма</th>
+                                <th>План. дата</th>
+                                <th>Факт. дата</th>
+                                <th ng-if="!paymentsBlock.calculateBuffer"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="gradeX" ng-repeat="payment in installments_payments | orderBy: 'id' track by $index">
+                                <td>{{$index+1}}</td>
+                                <td>
+                                  <span ng-hide="editIn.isEdit($index) && !$last"><nobr>{{Math.round(payment.amount) | price}}</nobr></span>
+                                  <input type="text" class="form-control input-block" autonumber="price"
+                                    ng-model="editIn.model.amount"
+                                    ng-show="editIn.isEdit($index) && !$last">
+                                </td>
+                                <td>
+                                  <span ng-hide="editIn.isEdit($index)">{{payment.date | date:'dd.MM.yyyy'}}</span>
+                                  <input type="text" class="form-control input-block"
+                                    jqdatepicker
+                                    ng-model="editIn.model.date"
+                                    ng-show="editIn.isEdit($index)">
+                                </td>
+                                <td>
+                                  <span ng-hide="editIn.isEdit($index)">
+                                    <span ng-show='!payment.fakt_date'> - </span>
+                                    <span ng-show='payment.fakt_date'>{{payment.fakt_date | date:'dd.MM.yyyy'}}</span>
+                                  </span>
+                                  <input type="text" class="form-control input-block"
+                                    jqdatepicker
+                                    ng-model="editIn.model.fakt_date"
+                                    ng-show="editIn.isEdit($index)">
+                                </td>
+                                <td class="last_child" align="center" style="width: 70px;" ng-if="!paymentsBlock.calculateBuffer">
+                                  <span ng-hide="editIn.isEdit($index)" has-permission="app_nedv.change_payments">
+                                    <a role='button' ng-click="editIn.edit(payment, $index)" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                                  </span>
+                                  <span ng-show="editIn.isEdit($index)">
+                                    <a role='button' ng-click="editIn.save(payment, $index)" class="on-editing save-row"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <a role='button' ng-click="editIn.cancel()" class="on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                  </span>
+                                </td>
+                              </tr>
+                              <tr class="warning">
+                                <td></td>
+                                <td colspan="4"><b>Всего выплачено: {{Math.round(paymentsBlock.done) | price}}</b></td>
+                              </tr>
+                              <tr>
+                                <td></td>
+                                <td colspan="4"><b>Остаток: {{Math.round(getPriceForCalculate() - paymentsBlock.done) | price}}</b></td>
+                              </tr>
+                              <tr ng-if="paymentsBlock.calculateBuffer">
+                                <td></td>
+                                <td colspan="4">
+                                  <button type='button' class="btn btn-success" ng-click="paymentsBlock.installments.save()">Сохранить платежи</button>
+                                  <button type='button' class="btn btn-white" ng-click="paymentsBlock.installments.cancel()">Отмена</button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-xs-6">
+            <div class="card-box">
+              <h4 class="m-t-0 header-title"><b>История квартиры</b></h4>
+              <div class="p-20">
+                <div class="timeline-2_wrapper niceScroll" nice-scroll>
+                  <div class="preloader_center" ng-show='preloader.history'>
+                    <img src="assets/images/preloader.gif"  alt="">
+                  </div>
+                  <div class="timeline-2" ng-show='!preloader.history'>
+                    <div class="time-item"
+                        ng-repeat="event in history | orderBy: '-createdon'">
+                      <div class="item-info">
+                        <div class="text-muted">{{event.createdon | date:'dd.MM.yyyy HH:mm'}}</div>
+                        <p ng-show='event.type=="created"'>
+                          {{users[event.user].name}}: cоздание квартиры
+                        </p>
+                        <p ng-show='event.type=="status_changed"'>
+                          {{users[event.user].name}}:
+                          <span ng-show="!!event.state"> {{(event.state).name}} </span>
+                          <span ng-show="!!event.state && !!event.status">- </span>
+                          <span ng-show="!!event.status">{{(event.status).name}} </span>
+                          <span ng-show="!!event.status_time">до {{event.status_time | date:'dd.MM.yyyy'}} </span> <br>
+                          <span ng-show="!!event.client">Клиент: <a href="#/clients/{{event.client.id}}" class="text-info">{{event.client.fio}}</a></span>
+                          <span>{{getSales(event.sales)}}</span>
+                        </p>
+                        <p ng-show='event.type=="sale_added"'>
+                          {{users[event.user].name}}:
+                          <span>{{getSales(event.sales)}}</span>
+                        </p>
+                        <p ng-show='event.type=="change_price"'>
+                          {{users[event.user].name}}:
+                          <span ng-show="event.price && event.price>0">новая цена {{Math.round(event.price) | price}}руб</span>
+                          <span ng-show="event.super_price && event.super_price>0">
+                            <span ng-show="event.price && event.price>0">; </span>
+                            цена по акции {{Math.round(event.super_price) | price}}руб.
+                          </span>
+                        </p>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- modals -->
+      <div id="changeSales" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="b-0 p-0">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click='cancelSales()'>×</button>
+              <div ng-show="!isFreeze()">
+                <h4 class="modal-title font-bold" id="myModalLabel" >Изменение набора акций</h4>
+                <p class="modal-subtitle">Назначьте новую акцию или удалите ненужную</p>
+              </div>
+              <div ng-show="isFreeze()">
+                <h4 class="modal-title font-bold" id="myModalLabel">Просмотр набора акций</h4>
+                <p class="modal-subtitle">Список примененных/доступных акций</p>
+              </div>
+            </div>
+             <div class="modal-body p-0">
+              <table class="table">
+                <tbody>
+                  <tr ng-repeat='sale in sales | orderBy: "id"'
+                  ng-class="{'disabled': isSaleDisabled(sale)}">
+                    <td>
+                      <div class="checkbox">
+                        <div class="col-md-8">
+                          <input id="checkbox{{sale.id}}" type="checkbox"
+                          ng-model='sale.checked'
+                          ng-change='changeSalesPermission(sale)'
+                          ng-disabled='isSaleDisabled(sale)'
+                          >
+                          <label for="checkbox{{sale.id}}">
+                            Акция "{{sale.name}}"
+                          </label>
+                        </div>
+                        <div class="col-md-4 text-right">
+                          <p>
+                            <span ng-show="salesPermission[sale.id]">недоступно</span>
+                            <span ng-show="!salesPermission[sale.id]">
+                              <span ng-show='sale.typex==1'>бессрочная</span>
+                              <span ng-show='sale.typex==2'>{{sale.from_date | date:'dd.MM.yyyy'}} - {{sale.to_date | date:'dd.MM.yyyy'}}</span>
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer text-left b-0 p-0" ng-show="!isFreeze()">
+              <button type="button" class="btn btn-success" ng-click='updateSales()'>Сохранить</button>
+              <button type="button" class="btn btn-link" data-dismiss="modal" ng-click='cancelSales()'>Отменить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="modalImg" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="m-b-20">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              </div>
+              <div class="modal-body">
+                <div class="col-xs-12 p-l-0">
+                  <div class="thumbnail modal-img">
+                    <img ng-src="{{modal.src}}" alt="" class="img-responsive">
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <div id="changeDeal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel" ng-show="modal.isShow('create')">Добавление участника сделки</h4>
+                    <h4 class="modal-title" id="myModalLabel" ng-show="modal.isShow('delete')">Удаление участника сделки</h4>
+                </div>
+                <div class="modal-body">
+                  <form class="form-horizontal" role="form" ng-show="modal.isShow('create')">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Роль</label>
+                        <div class="col-sm-6"
+                            form-input
+                            type="'Char'"
+                            model="modal.role"
+                            list="[]"
+                        >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Клиент</label>
+                        <div class="col-sm-6"
+                          input-search-fio-temp
+                          model1='modal.fio'
+                          list1='clientsListForDeal'
+                          result1="modal.client"
+                        ></div>
+                    </div>
+                      <div class="col-sm-6 col-sm-offset-4" ng-show="!!modal.client">
+                        <p class="text-muted font-13"><a href="#/clients/{{modal.client.id}}" target="_blank">перейти в карточку клиента</a></p>
+                        <p class="text-muted font-15" style="color: #565656;">{{modal.client.phone}}</p>
+                      </div>
+                  </form>
+                  <div ng-show="modal.isShow('delete')">
+                    Вы действительно хотите удалить {{clients[modal.person.client].fio}}?
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-6 col-xs-offset-4">
+                      <button type="button" class="btn btn-success"
+                        ng-click='modal.createDeal()'
+                        ng-show="modal.isShow('create')"
+                        ng-disabled="!modal.client">
+                        Добавить
+                      </button>
+                      <button type="button" ng-click='modal.removeDeal()' class="btn btn-danger" ng-show="modal.isShow('delete')">Удалить</button>
+                      <button type="button" ng-click='modal.cancel()' class="btn btn-white">Отмена</button>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="removePayment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Удаление платежа</h4>
+            </div>
+            <div class="modal-body">
+                Вы действительно хотите удалить платеж {{editIn.modal.obj.amount | price}}руб. от {{editIn.modal.obj.createdon | date:'dd.MM.yyyy'}}?
+              <div class="row m-t-20">
+                <div class="col-xs-6">
+                  <button type="button" ng-click='editIn.remove()' class="btn btn-danger">Удалить</button>
+                  <button type="button" ng-click='editIn.removeCancel()' class="btn btn-white">Отмена</button>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+
+      <div id="removePaymentAdd" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Удаление платежа</h4>
+            </div>
+            <div class="modal-body">
+                Вы действительно хотите удалить платеж {{addPayment.modal.obj.amount | price}}руб. от {{addPayment.modal.obj.createdon | date:'dd.MM.yyyy'}}?
+              <div class="row m-t-20">
+                <div class="col-xs-6">
+                  <button type="button" ng-click='addPayment.remove()' class="btn btn-danger">Удалить</button>
+                  <button type="button" ng-click='addPayment.removeCancel()' class="btn btn-white">Отмена</button>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+
+      <div id="fastContactAdd" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Быстрое добавление контакта</h4>
+            </div>
+
+            <div class="modal-body">
+              <form class="form-horizontal" role="form">
+                <div class="form-group">
+                  <label class="col-xs-4 control-label">ФИО клиента</label>
+                  <div class="col-xs-6">
+                    <input type="text" class="form-control" ng-model='fastContact.new_client.fio'>
+                  </div>
+                </div>
+                 <div class="form-group">
+                  <label class="col-xs-4 control-label">Телефон</label>
+                  <div class="col-xs-6">
+                    <input type="text" class="form-control"
+                      ng-model="fastContact.new_client.phone"
+                      ui-mask="+7 (999) 999-99-99"
+                      model-view-value="true">
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="row">
+              <div class="col-xs-6 col-xs-offset-4">
+                <button type="button"
+                  ng-click='fastContact.createClient()'
+                  class="btn btn-success"
+                  ng-disabled="!fastContact.new_client.phone || !fastContact.new_client.fio || fastContact.load">Добавить</button>
+                <button type="button" ng-click='fastContact.cancel()' class="btn btn-white">Отмена</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="changeFlatImg" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" ng-show="imageEdit.type=='plan'">Изменение cхемы планировки</h4>
+                <h4 class="modal-title" id="myModalLabel" ng-show="imageEdit.type=='floor'">Изменение cхемы этажа</h4>
+            </div>
+            <div class="modal-body">
+              <div file-input model="imageEdit.model" conmodel="{{imageEdit.conmodel}}"></div>
+              <div class="row m-t-20">
+                <div class="col-xs-6">
+                  <button type="button" ng-click='imageEdit.save()' class="btn btn-success" ng-disabled="imageEdit.load || imageEdit.isSame()">Сохранить</button>
+                  <button type="button" ng-click='imageEdit.cancel()' class="btn btn-white">Отмена</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <ul class="parsley-errors-list filled m-t-0" ng-show="imageEdit.error">
+                    <li class="parsley-required">
+                      {{imageEdit.error_text}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+
+
+      <div id="statusComment" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div>
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> -->
+                <h4 class="modal-title" id="myModalLabel">Добавьте комментарий</h4>
+            </div>
+            <div class="modal-body">
+              <textarea class="form-control" ng-model="statusComment.model" rows="5"></textarea>
+              <div class="row m-t-20">
+                <div class="col-xs-12">
+                  <div class="pull-right">
+                    <button type="button" ng-click='statusComment.cancel()' class="btn btn-white">Отменить</button>
+                    <button type="button" ng-click='statusComment.create()' class="btn btn-success">Добавить</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+
+
+<!--       <div id="removePaymentAdd" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Удаление платежа</h4>
+            </div>
+            <div class="modal-body">
+                Вы действительно хотите удалить платеж {{addPayment.modal.obj.amount | price}}руб. от {{addPayment.modal.obj.createdon | date:'dd.MM.yyyy'}}?
+              <div class="row m-t-20">
+                <div class="col-xs-6">
+                  <button type="button" ng-click='addPayment.remove()' class="btn btn-danger">Удалить</button>
+                  <button type="button" ng-click='addPayment.removeCancel()' class="btn btn-white">Отмена</button>
+                </div>
+              </div>
+            </div>
+           </div>
+        </div>
+      </div>
+ -->

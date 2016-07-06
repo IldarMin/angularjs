@@ -1,0 +1,35 @@
+<ng-transclude ng-show="!pencil_editor.editable" style=""></ng-transclude>
+<span class="button-action" ng-show="pencil_editor.show()">
+	<i class="md md-mode-edit" style="position: absolute; right: 3px; " ng-click="pencil_editor.edit()"></i>
+</span>
+<span class="editable-container editable-inline" ng-if="pencil_editor.editable">
+    <div class="control-group form-group m-b-0 col-xs-12 p-l-0" style="padding-right: 0;">
+
+      	<div class="col-xs-9 p-l-0 p-r-0" ng-if="pencil_editor.is('text')">
+       		<!-- <input type="text" class="form-control input-sm"
+       			ng-model="pencil_editor.model"> -->
+			<textarea name="name" rows="4" cols="10" class="form-control input-sm"
+       			ng-model="pencil_editor.model" style=""></textarea>
+      	</div>
+
+      	<div class="col-xs-8 p-l-0 p-r-0" ng-if="pencil_editor.is('select')">
+            <div one-select model="pencil_editor.model" list="pencil_editor.list"></div>
+      	</div>
+
+
+      	<div class="editable-buttons" style="position: absolute; right: 0; width: 32px;">
+        	<button type="button" class="btn btn-success btn-sm"
+        		ng-click="pencil_editor.save()" style="font-size: 8px;"><i class="md md-done"></i></button>
+        	<button type="button" class="btn btn-danger btn-sm"
+        		ng-click="pencil_editor.cancel()" style="font-size: 8px;"><i class="md md-clear"></i></button>
+      	</div>
+<!--       	<div class="col-xs-12">
+        	<ul class="parsley-errors-list filled m-t-0">
+	          	<li class="parsley-required">
+	            	Ошибка при сохранении
+	          	</li>
+        	</ul>
+      	</div>
+    </div>
+    <div ng-show="costEdit.mode=='load'"></div> -->
+</span>

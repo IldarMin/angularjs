@@ -1,0 +1,18 @@
+<div class="bootstrap-select custom">
+  <button type="button" class="btn dropdown-toggle btn-white select-button r_select" aria-expanded="false"
+   ng-disabled='disabled'
+   ng-click='select.toggleDropdown()'>
+    <span class="filter-option pull-left">{{model.name}}</span>
+    <span class="caret" ng-hide="disabled"></span>
+  </button>
+  <div class="open select-menu" ng-show='select.showDropdown() && list.length>0'>
+    <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+      <li ng-repeat="group in list">
+        <span class="parent-group-list">{{group.parent.name}}</span>
+        <a ng-repeat="item in group.list" class="item-group-list" ng-click='select.toggleName(item)'>
+          {{item.name}}
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

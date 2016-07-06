@@ -1,0 +1,25 @@
+<div class="bootstrap-select custom">
+  <button type="button" class="btn dropdown-toggle btn-white select-button r_select"
+    ng-click='multiSelect.toggleDropdown()'
+    ng-disabled='disabled'>
+    <span class="filter-option pull-left">{{multiSelect.getSelected(list)}}</span>
+    <span class="caret" ng-hide="disabled"></span>
+  </button>
+  <div class="open select-menu" ng-show='multiSelect.showDropdown()'>
+    <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+      <li data-original-index="0"
+        ng-click='multiSelect.resetSelected(list)' ng-hide='hasntAll'>
+        <a>Все</a>
+      </li>
+      <li data-original-index="0"
+      ng-click='multiSelect.toggleName(obj)'
+      ng-repeat='obj in list | orderBy: multiSelect.order track by obj.id' >
+        <a>
+          <span class="text">{{obj.name}}</span>
+          <span class="glyphicon glyphicon-ok check-mark"
+          ng-show='obj.selected'></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

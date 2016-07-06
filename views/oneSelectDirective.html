@@ -1,0 +1,33 @@
+<div class="bootstrap-select custom">
+  <button type="button" class="btn dropdown-toggle btn-white select-button r_select" aria-expanded="false"
+   ng-disabled='disabled'
+   ng-click='select.toggleDropdown()'
+   ng-class='(invalid) ? "has-error" : "" '>
+    <span class="filter-option pull-left">{{model.name}}</span>
+    <span class="caret" ng-hide="disabled"></span>
+  </button>
+  <div class="open select-menu" ng-show='select.showDropdown() && list.length>0'>
+    <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+      <li data-original-index="0" ng-click='select.toggleName(obj)' ng-repeat='obj in list' ng-if="!!obj.name">
+        <a tabindex="0" class="" style="" data-tokens="null">
+          <span class="text">{{obj.name}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- <div class="dropdown">
+  <button class="btn btn-white" type="button" aria-expanded="false"
+    ng-disabled='disabled'
+    ng-click='select.toggleDropdown()'>
+    {{model.name}}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" ng-show='select.showDropdown() && list.length>0'>
+    <li ng-click='select.toggleName(obj)' ng-repeat='obj in list'>
+      <a href="#">{{obj.name}}</a>
+    </li>
+  </ul>
+</div> -->

@@ -1,0 +1,319 @@
+<div class="row contact">
+  <div class="col-xs-12">
+    <div class="card-box">
+      <div class='page-header m-t-0'>
+        <h4><b>{{client['fio']}}</b></h4>
+        <p class="text-muted font-13">
+          <a href="#/clients/">назад к списку клиентов</a>
+        </p>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="bg p-20 m-b-30">
+            <h4><b>Информация о клиенте</b></h4>
+            <form class="form-horizontal m-t-30">
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">Фио клиента</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['fio']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client['fio']">{{client['fio']}}</span>
+                    <span ng-if="!client['fio']"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">Телефон</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['phone']" phone  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client['phone']">{{client['phone']}}</span>
+                    <span ng-if="!client['phone']"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">E-mail</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['email']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client['email']">{{client['email']}}</span>
+                    <span ng-if="!client['email']"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">Лицо</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['typex']" select  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client['typex']">{{client['typex'].name}}</span>
+                    <span ng-if="!client['typex']"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="card_box_status" ng-show="client.deals && client.deals.length != 0">
+              <h4><b>Участвует в сделках: </b><span class="statuses_sum">всего {{client.deals.length}}</span></h4>
+              <div class="statuses_info">
+                  <div>
+                       <div>
+                           <div>
+                               Квартиры:
+                                <span ng-repeat="flat in client.deals">
+                                <a ng-href="#/flats/{{flat.id}}">{{flat.plan}} №{{flat.number}} {{($last) ? '' : ', '}}</a></span>
+                           </div>
+                       </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="card_box_status">
+              <h4><b>Статусы клиента: </b><span class="statuses_sum">всего {{client.statuses.length}}</span></h4>
+              <div class="statuses_info">
+                  <div ng-repeat="flats_status in client.statuses">
+                       <i class="md md-brightness-1 circle icon status" ng-class="flats_status.status.class" style="line-height: 27px;"></i>
+                       <label class="st_act">{{flats_status.status.name}}</label>
+                       <div style="margin-left: 24px;">
+                          Квартиры:
+                            <span ng-repeat="flat in flats_status.flats">
+                              <a href="#/flats/{{flat.id}}" 
+                              ng-class="{'text-danger': isOverdue(flat.status_time, flats_status.status)}">{{flat.plan}} №{{flat.number}}</a>
+                              {{($last) ? '' : ', '}}
+                            </span>
+                       </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>История клиента</b></h4>
+            <h4 class="m-0"><span class="text-custom">Всего {{contacts.length}}</span></h4>
+
+            <div class="p-20">
+              <div class="timeline-2_wrapper niceScroll" nice-scroll>
+                <div ng-show='preloader.contacts'>
+                  <img src="assets/images/preloader.gif"  alt="">
+                </div>
+                <div ng-hide='preloader.contacts' class="timeline-2">
+                  <div class="time-item"
+                      ng-repeat="contact in contacts | orderBy: '-createdon'">
+                    <div class="item-info">
+                      <div class="text-muted">{{contact.time | date:'dd.MM.yyyy HH:mm'}}</div>
+                      <p>
+                        {{users[contact.user].name}}: {{contact_obj['typex'][contact.typex].name}} {{contact_obj['source'][contact.source].name.toLowerCase()}}
+                        <br>
+                        Результат: {{contact_obj['result'][contact.result].name.toLowerCase()}}
+                      </p>
+                      <p ng-hide="!contact.comment"><em>"{{contact.comment}}"</em></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div ng-hide='isLaw' class="bg p-20 m-b-30" >
+            <h4><b>Паспортные данные</b></h4>
+            <form class="form-horizontal m-t-30">
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[0].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[0].name}}']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.passports[passports_form[0].name]">{{client.passports[passports_form[0].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[0].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[1].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[1].name}}']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.passports[passports_form[1].name]">{{client.passports[passports_form[1].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[1].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[2].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[2].name}}']" has-permission="app_clients.change_clients" textarea>
+                    <span ng-if="!!client.passports[passports_form[2].name]">{{client.passports[passports_form[2].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[2].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[3].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[3].name}}']" calendar has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.passports[passports_form[3].name]">{{client.passports[passports_form[3].name] | date:'dd.MM.yyyy' : 'UTC'}}</span>
+                    <span ng-if="!client.passports[passports_form[3].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[4].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[4].name}}']"  has-permission="app_clients.change_clients" mask="999-999">
+                    <span ng-if="!!client.passports[passports_form[4].name]">{{client.passports[passports_form[4].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[4].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[5].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[5].name}}']" calendar  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.passports[passports_form[5].name]">{{client.passports[passports_form[5].name] | date:'dd.MM.yyyy' : 'UTC'}}</span>
+                    <span ng-if="!client.passports[passports_form[5].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[6].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[6].name}}']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.passports[passports_form[6].name]">{{client.passports[passports_form[6].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[6].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{passports_form[7].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['passports']['{{passports_form[7].name}}']" has-permission="app_clients.change_clients" textarea>
+                    <span ng-if="!!client.passports[passports_form[7].name]">{{client.passports[passports_form[7].name]}}</span>
+                    <span ng-if="!client.passports[passports_form[7].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div ng-show='isLaw' class="bg p-20">
+            <h4><b>Реквизиты юр.лица</b></h4>
+            <form class="form-horizontal m-t-30">
+
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[0].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[0].name}}']"  has-permission="app_clients.change_clients" textarea>
+                    <span ng-if="!!client.requisites[requisites_form[0].name]">{{client.requisites[requisites_form[0].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[0].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[1].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[1].name}}']"  has-permission="app_clients.change_clients" textarea>
+                    <span ng-if="!!client.requisites[requisites_form[1].name]">{{client.requisites[requisites_form[1].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[1].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[2].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[2].name}}']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[2].name]">{{client.requisites[requisites_form[2].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[2].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[3].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[3].name}}']"  has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[3].name]">{{client.requisites[requisites_form[3].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[3].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[4].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[4].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[4].name]">{{client.requisites[requisites_form[4].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[4].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[5].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[5].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[5].name]">{{client.requisites[requisites_form[5].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[5].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[6].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[6].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[6].name]">{{client.requisites[requisites_form[6].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[6].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[7].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[7].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[7].name]">{{client.requisites[requisites_form[7].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[7].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[8].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[8].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[8].name]">{{client.requisites[requisites_form[8].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[8].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[9].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[9].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[9].name]">{{client.requisites[requisites_form[9].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[9].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-xs-4 control-label">{{requisites_form[10].verbose}}</label>
+                <div class="col-xs-8">
+                  <inline-editor item="client['requisites']['{{requisites_form[10].name}}']" has-permission="app_clients.change_clients">
+                    <span ng-if="!!client.requisites[requisites_form[10].name]">{{client.requisites[requisites_form[10].name]}}</span>
+                    <span ng-if="!client.requisites[requisites_form[10].name]"><i>Пустое поле</i></span>
+                  </inline-editor>
+                </div>
+              </div>
+
+
+          </div>
+        </div>
+
+
+    </div>
+  </div>
+</div>

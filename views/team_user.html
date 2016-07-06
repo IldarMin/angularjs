@@ -1,0 +1,168 @@
+<!--{{ user }}-->
+<div class="content team_user">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <div class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li><a href="#">Главная</a></li>
+          <li><a href="#">Проекты</a></li>
+          <li><a href="#">ЖК Победа</a></li>
+          <li class="active">Контакт</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card-box">
+
+          <!-- заголовок -->
+          <div class="page-header m-t-0">
+<!--             <h4 ng-repeat="project in user.profile.projects" class="header-title text-tr-n pull-right m-t-0 m-l-10"> {{ project.name }}</h4>
+ -->            <h4 class="header-title m-t-0 text-tr-n">{{ user.first_name }} {{ user.last_name }}</h4>
+            <a href="#/team">к списку сотрудников</a>
+          </div>
+
+          <!-- основная информация -->
+          <div class="row m-b-20">
+
+            <!-- аватар  -->
+            <div class="col-xs-3">
+              <div ng-if="user.profile.avatar">
+                <img class="img-thumbnail img-responsive" src="{{user.profile.avatar}}">
+              </div>
+              <div ng-if="!user.profile.avatar" class="avatar source-sans-pro">
+                <p><b>Загрузите фотографию<br> или перетащите в это окно</b></p>
+                <button class="btn btn-primary">Загрузить аватар</button>
+              </div>
+            </div>
+
+            <!-- основная информация -->
+            <div class="col-xs-9 sot-info p-20">
+              <form action="" class="form-horizontal">
+
+                <div class="form-group ">
+                  <label class="col-xs-3 control-label">ФИО сотрудника</label>
+                  <div class="col-xs-9">
+                    <p class="form-control-static">{{ user.first_name }} {{ user.last_name }}</p>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <label class="col-xs-3 control-label">Телефон</label>
+                  <div class="col-xs-9">
+                    <p class="form-control-static">{{ user.profile.phone }}</p>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <label class="col-xs-3 control-label">E-mail</label>
+                  <div class="col-xs-9">
+                    <p class="form-control-static"><a href="#">{{ user.email }}</a></p>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <label class="col-xs-3 control-label">Проекты</label>
+                  <!-- <div class="col-xs-4"> -->
+                    <span ng-repeat="project in user.profile.projects" value="{{project.name}}">{{project.name}}, </span>
+<!--                     <select class="form-control">
+                      <option ng-repeat="project in user.profile.projects" value="{{project.name}}">{{project.name}}</option>
+                    </select>
+                  </div>
+                  <div class="col-xs-3 button-list">
+                    <button class="btn btn-icon waves-effect btn-success waves-light"><i class="glyphicon glyphicon-ok"></i></button>
+                    <button class="btn btn-icon waves-effect btn-danger waves-light"><i class="glyphicon glyphicon-remove"></i></button>
+                  </div> -->
+                </div>
+                <hr>
+                <button class="btn btn-inverse waves-effect waves-light btn-xs">Сбросить пароль</button>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- вспомогательная информация -->
+          <div class="row">
+            <div class="col-xs-7 dolj">
+              <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                  <h3 class="panel-title text-tr-n">Должность сотрудника в системе</h3>
+                </div>
+                <div class="panel-body">
+                  <form action="" class="form-horizontal">
+
+                    <div ng-show="haveGroups" class="form-grop">
+                      <label class="col-xs-6 control-label">Текущая должность</label>
+                      <div class="col-xs-6">
+                        <input ng-repeat="group in user.groups" type="text" class="form-control" readonly="" value="{{group.name}}">
+                      </div>
+                      </br></br></br><div class="col-xs-6"></div>
+                      <button type="button" ng-click='changeGroup()' class="btn btn-default">Редактировать</button>
+                    </div>
+
+                    <div ng-show="!haveGroups" class="form-grop">
+                      <label class="col-xs-6 control-label">Назначить должность</label>
+                      <div class="col-xs-6">
+                        <select class="form-control" ng-model="selectedGroup">
+                          <option ng-repeat="group in user_groups" value="{{group.pk}}">{{group.fields.name}}</option>
+                        </select>
+                      </div>
+                      </br></br></br><div class="col-xs-6"></div>
+                      <button type="button" ng-click='save_group(selectedGroup)' class="btn btn-default">Сохранить</button>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xs-5">
+              <div class="card-box">
+                <h4 class="m-t-0 header-title source-sans-pro text-tr-n"><b>Действия сотрудника</b></h4>
+                <div class="p-20">
+                  <div class="timeline-2_wrapper niceScroll" nice-scroll>
+                    <div ng-show='preloader.history'>
+                      <img src="assets/images/preloader.gif" alt="">
+                    </div>
+                    <div class="timeline-2" ng-show='!preloader.history'>
+
+                      <div class="time-item" ng-repeat="event in user.all_history | orderBy: '-createdon'  ">
+
+                         <div class="item-info" ng-show='event.type=="manage_flats"'>
+                          <div class="text-muted">{{event.createdon | date:'dd.MM.yyyy HH:mm:ss'}}</div>
+                          <p>
+                            Создание квартиры пользоваталем <a href="#" class="text-info">{{user.first_name}} {{user.last_name}}</a>
+                          </p>
+                        </div>
+                         
+                        <div class="item-info" ng-show='event.type=="flatshistory"'>
+                          <div class="text-muted">{{event.createdon | date:'dd.MM.yyyy HH:mm:ss'}}</div>
+                            <p>
+                              Менеджер <a href="#" class="text-info">{{user.first_name}} {{user.second_name}}</a>
+                              <span ng-show="!!event.state">Установил состояние "{{event.state.name}}".</br></span>
+                              <span ng-show="!!event.status">Установил статус "{{event.status.name}}".</br></span>
+                              <span ng-show="!!event.status_time">Установил срок статуса {{event.status_time | date:'dd.MM.yyyy'}}.</br></span>
+                              <span ng-show="!!event.client">Добавил клиента <a href="#" class="text-info">{{event.client.fio}}</a>.</br></span>
+                              <!-- <span>{{getSales(event.sales)}}</span> -->
+                            </p>
+                        </div>
+
+                         <div class="item-info" ng-show='event.type=="flslshistory"'>
+                          <div class="text-muted">{{event.createdon | date:'dd.MM.yyyy HH:mm:ss'}}</div>
+                          <p>
+                            установил акции <span ng-repeat="sale in event.sales">"{{sale.name}}", </span>
+                          </p>
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>

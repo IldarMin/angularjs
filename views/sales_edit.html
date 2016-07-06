@@ -1,0 +1,231 @@
+<div class="content" id='sales-edit'>
+  <div class="container">
+
+    <div class="row ">
+      <div class="card-box">
+
+        <div class="row">
+          <div class="col-xs-10">
+            <h4 class="m-t-0 m-b-20" ng-if="mod=='create'"><b>Создание акции</b></h4>
+            <h4 class="m-t-0 m-b-20" ng-if="mod=='edit'"><b>Редактирование акции</b></h4>
+          </div>
+          <div class="col-xs-2">
+            <a href="#/sales" class="pull-right btn btn-link">вернуться к акциям</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+          <div class="bg p-20">
+            <!-- <h4 class="text-dark header-title">Условия акции</h4> -->
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label class="col-xs-2 control-label text-left">Название</label>
+                <div class="col-xs-3"
+                  form-input
+                  type="'Char'"
+                  model="model.name"
+                  list="[]"
+                >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label text-left">Описание</label>
+                <div class="col-xs-3"
+                  form-input
+                  type="'Textarea'"
+                  model="model.description"
+                  list="[]"
+                >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label text-left">Площадь</label>
+                <div class="col-xs-1">
+                  <input type="number" class="form-control"
+                    ignore-mouse-wheel min="0"
+                    ng-model="model.area.from"
+                    ng-change='areaChanged()'>
+                </div>
+                <div class='form-between'></div>
+                <div class="col-xs-1">
+                  <input type="number" class="form-control"
+                    ignore-mouse-wheel min="0"
+                    ng-model="model.area.to"
+                    ng-change='areaChanged()'>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label"> Дом и БС</label>
+                <div class="col-xs-2"
+                  one-select
+                  model="model.building"
+                  list="list.buildings"
+                  onchanged="buildingChanged(par)"
+                ></div>
+
+                <div class="col-xs-2"
+                  one-select
+                  model="model.section"
+                  list="list.sections"
+                  onchanged="sectionChanged(par)"
+                >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label">Планировки</label>
+                <div class="col-xs-2"
+                  one-select
+                  model="model.room"
+                  list="list.rooms"
+                  onchanged='roomChanged(par)'
+                >
+                </div>
+                <div class="col-xs-3"
+                  multiple-select
+                  list='list.filtered_plans'
+                >
+                </div>
+              </div>
+
+              <div class="form-group" ng-hide="list.sales.length == 0">
+                <label class="col-xs-2 control-label">Несовместима с</label>
+                <div class="col-xs-3"
+                  multiple-select
+                  list='list.sales'
+                  placeholder="'Ничего не выбрано'"
+                  hasnt-all="true"
+                >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label">Изменение цен</label>
+                <div class="col-xs-2"
+                  one-select
+                  model="model.cost_settings.obj_type"
+                  list="list.obj_type"
+                  onchanged='cost_settingsChanged(par)'
+                >
+                </div>
+                <div class="col-xs-3"
+                  one-select
+                  model="model.cost_settings.action"
+                  list="list.obj_action"
+                  onchanged="cost_actionChanged(par)"
+                >
+                </div>
+                <div class="col-xs-2">
+                  <input type="text" class="form-control autonumber" ng-model="model.cost_settings.val" autonumber="price">
+                </div>
+                <div class="col-xs-2"
+                  form-input
+                  type="'Select'"
+                  model="model.cost_settings.val_type"
+                  list="list.val_type"
+                >
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-xs-2 control-label">Срок действия</label>
+                <div class="radio radio-primary radio-inline"
+                    ng-repeat='d_type in list.duration_type'>
+                  <input type="radio" name="radio" id="radio{{d_type.id}}"
+                      ng-model="model.duration.type"
+                      ng-value='d_type'>
+                  <label for="radio{{d_type.id}}">{{d_type.name}}</label>
+                </div>
+              </div>
+
+              <div class="form-group" ng-show='model.duration.type.id == 2'>
+                <div class="col-xs-2"></div>
+                <div class="col-xs-1"
+                  form-input
+                  type="'Date'"
+                  model="model.duration.from"
+                  list="[]"
+                >
+                </div>
+                <div class='form-between'></div>
+                <div class="col-xs-1"
+                  form-input
+                  type="'Date'"
+                  model="model.duration.to"
+                  list="[]"
+                >
+                </div>
+              </div>
+            </form>
+            </div>
+
+            <!-- <div class="m-t-20 col-xs-6 col-xs-offset-2">
+              <button type="button" ng-click='searchFlats()' ng-show="condition == 'edit'" class="btn btn-purple">Применить параметры</button>
+              <button type="button" ng-click='saveChanges()' ng-show="condition == 'watch'" class="btn btn-purple">Сохранить</button>
+              <button type="button" ng-click='cancelChanges()' ng-show="condition == 'watch' || condition == 'edit'" class="btn btn-white">Отмена</button>
+            </div> -->
+            <div class="m-t-20 col-xs-6 col-xs-offset-2" ng-show="condition == 'load'">
+              <img src="assets/images/preloader.gif"  alt="">
+            </div>
+            <!-- <div class="m-t-20 col-xs-6 col-xs-offset-2" ng-show="condition == 'watch'">
+              <div class="m-b-10" ng-repeat='section in flats' ng-hide='section.flats.length == 0'>
+                <b>БС {{section.number}} Дом {{section.building.number}}</b><br>
+                <span ng-repeat='flat in section.flats | orderBy: "number"'>
+                  <a href="#/flats/{{flat.id}}">№{{flat.number}}</a>{{($last) ? '' : ', ' }}
+                </span>
+              </div>
+            </div> -->
+            <div class="m-t-20 col-xs-6 col-xs-offset-2">
+              <button type="button" ng-click='searchFlats()' ng-show="condition == 'edit'" class="btn btn-purple">Показать результат</button>
+              <button type="button" ng-click='saveChanges()' ng-show="condition == 'watch'" ng-disabled="load" class="btn btn-purple">Сохранить</button>
+              <button type="button" ng-click='cancelChanges()' ng-show="condition == 'watch' || condition == 'edit'" class="btn btn-white">Отмена</button>
+            </div>
+            <!--  -->
+            <div class="row" ng-show="condition == 'watch'" >
+              <div class="col-xs-12">
+                <label class="col-xs-2 control-label" style="font-size: 17px;">Результат изменений</label><br><br>
+                <table class="table table-striped  table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Дом</th>
+                            <th>БС</th>
+                            <th>Этаж</th>
+                            <th>№ Кв.</th>
+                            <th>Планировка</th>
+                            <th>Площадь</th>
+                            <th>Цена</th>
+                            <th>Стоимость</th>
+                            <th>Новая цена</th>
+                            <th>Новая стоимость</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat='section in flats | orderBy: "number"'>
+                            <td>{{$index+1}}</td>
+                            <td><a href="#/buildings/{{section.building}}/sections/">{{buildings[section.building].adres}}, д.{{buildings[section.building].number}}</a></td>
+                            <td><a href="#/buildings/{{section.building}}/sections/{{section.floor.section}}">{{section.section.number}}</a></td>
+                            <td>{{section.floor.number}}</td>
+                            <td><a href="#/flats/{{section.id}}">{{section.number}}</a></td>
+                            <td>{{section.plan.name}}</td>
+                            <td>{{section.plan.area}}</td>
+                            <td>{{Math.round(section.price/section.plan.area) | price }}</td>
+                            <td>{{Math.round(section.price) | price}}</td>
+                            <td>{{Math.round(priceCalculate(section.price, section.plan.area)/section.plan.area) | price}}</td>
+                            <td>{{Math.round(priceCalculate(section.price, section.plan.area)) | price}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
+            </div>
+            <!--  -->
+
+          </div>
+
+        </div>
+      </div>
+    </div>

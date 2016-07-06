@@ -1,0 +1,108 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        <button class="pull-right btn btn-default" ng-click='Mod.add()' data-toggle="modal" data-target="#myModal">+ Добавить дом</button>
+			<h4 class="text-dark">Редактирование домов</h4>
+			<p class="text-muted">Список строящихся домов в проекте. Здесь вы можете редактировать или удалить дом.</p>
+			<br><br>
+
+        	<table class="table table-striped">
+        		<thead>
+	        		<tr>
+	        			<th>Номер дома</th>
+	        			<th>Адрес дома</th>
+	        			<th>Очередь сдачи</th>
+	        			<th>Редактирование</th>
+	        		</tr>
+        		</thead>
+        		<tbody>
+	        		<tr ng-repeat="building in buildings | orderBy: 'createdon' ">
+	        			<td>{{building.number}}</td>
+	        			<td>{{building.adres}}</td>
+	        			<td>{{building.queue}}</td>
+	        			<td>
+	        			    <i class="md md-mode-edit" ng-click='Mod.edit(building)' data-toggle="modal" data-target="#myModal"></i>
+                            <i class="md md-close" ng-click='Mod.delet(building)' data-toggle="modal" data-target="#myModal"></i>
+	        			</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 ng-show='Mod.show("create")' class="modal-title" id="myModalLabel">Новый дом</h4>
+                    <p ng-show='Mod.show("create")' class="text-muted">Заполните общие параметры создаваемого дома.</p>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='Mod.show("update")'>Редактирование дома</h4>
+                    <h4 class="modal-title" id="myModalLabel" ng-show='Mod.show("remove")'>Удаление дома</h4>
+                </div>
+                <div class="modal-body" ng-hide='Mod.show("remove")'>
+
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Номер дома</label>
+							<div class="col-sm-2"
+								form-input
+								type="Mod.data['number'].type"
+								model="Mod.data['number'].value"
+								list="Mod.data['number'].choices"
+								errors="Mod.data['number'].errors"
+							>
+							</div>
+							<label class="col-sm-2 control-label">Сдача</label>
+							<div class="col-sm-5"
+								form-input
+								type="Mod.data['queue'].type"
+								model="Mod.data['queue'].value"
+								list="Mod.data['queue'].choices"
+								errors="Mod.data['queue'].errors"
+							>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Адрес</label>
+							<div class="col-sm-9"
+								form-input
+								type="Mod.data['adres'].type"
+								model="Mod.data['adres'].value"
+								list="Mod.data['adres'].choices"
+								errors="Mod.data['adres'].errors"
+							>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label">Описание</label>
+							<div class="col-xs-9"
+								form-input
+								type="Mod.data['description'].type"
+								model="Mod.data['description'].value"
+								list="Mod.data['description'].choices"
+								errors="Mod.data['description'].errors"
+							>
+							</div>
+						</div>
+
+					</form>
+                </div>
+                <div class="modal-body" ng-show='Mod.show("remove")'>
+                	Вы действительно ходите удалить дом номер {{Mod.data['number'].value}}, ул. {{Mod.data['adres'].value}}?
+                </div>
+                <div class="row">
+                  <div class="col-xs-8 col-xs-offset-3">
+                    <button type="button" ng-show='Mod.show("create")' ng-click='Mod.create()' class="btn btn-success" ng-disabled="Mod.isload">Создать дом</button>
+                    <button type="button" ng-show='Mod.show("update")' ng-click='Mod.update()' class="btn btn-success" ng-disabled="Mod.isload">Сохранить изменения</button>
+                    <button type="button" ng-show='Mod.show("remove")' ng-click='Mod.remove()' class="btn btn-danger" ng-disabled="Mod.isload">Удалить дом</button>
+                    <button type="button" ng-click='Mod.cancel()' class="btn btn-white" data-dismiss="modal">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

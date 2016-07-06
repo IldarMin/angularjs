@@ -1,0 +1,131 @@
+<div class="row">
+	<div class="col-lg-12">
+        <div class="widget-bg-color-icon card-box">
+        	<div class="row">
+		        <div class="col-lg-2">
+	                <div class="form-group">
+	                    <label>Менеджер</label>
+	                    <div class="row">
+	                    	<div class="col-lg-12">
+	                    		<div one-select model="filter.user" list="list.users"></div> 	
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-lg-4">
+	                <div class="form-group">
+	                    <label>Фильтр по дате</label>
+	                    <!-- <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+	                    <div class="row">
+	                    	<div form-input type="'DateTime'" model="filter.duration.from" class="col-lg-4"></div>
+	                    	<div form-input type="'DateTime'" model="filter.duration.to" class="col-lg-4"></div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-lg-5 m-l-20">
+		        	<div class="form-group has-feedback">
+	                    <label>Поиска по клиентам</label>
+	                    <input type="text" class="form-control" placeholder="Введите фамилию или телефон клиента" ng-model='filter.client'>
+	                    <i class="ion-search form-control-feedback l-h-34"></i>
+	                </div>
+		        </div>
+		    </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+	<div class="col-lg-12">
+        <div class="widget-bg-color-icon card-box">
+			<h4 class="text-dark">Перечень квартир</h4>
+			<br><br>
+
+			<div class="row m-b-30">
+				<div class="col-lg-2">
+                  <h4 class="text-dark">Дом</h4>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div one-select list='list.buildings' model='filter.building'></div>
+                    </div>
+                  </div>
+                </div>
+				<div class="col-lg-5">
+                  <div><h4 class="text-dark">Планировка и тип</h4></div>
+                  <div class="row">
+                    <div class="col-lg-5">
+                      <div one-select list='list.rooms' model='filter.room'></div>
+                    </div>
+                    <div class="col-lg-7">
+                      <div multiple-select list='filter.plans'></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <h4 class="text-dark">Состояние и статус</h4>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div one-select list='list.states' model='filter.state'></div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div one-select list='list.incl_statuses[filter.state.id]' model='filter.status'></div>
+                    </div>
+                  </div>
+                </div>
+
+			</div>
+			
+			<div class="row m-b-30" ng-repeat='(rooms_count, plans) in stock'>
+			<div class="col-lg-12">
+				<h4>
+					{{rooms_names[rooms_count]}} (общая площадь: {{info[rooms_count].area}} кв.м., общая сумма: {{info[rooms_count].sum_price | price}} руб)
+				</h4>
+				<table class="table table-striped">
+		    		<thead>
+		        		<tr>
+		        			<th>№</th>
+		        			<th>Планировка</th>
+		        			<th>Площадь</th>
+		        			<th>Цена за 1 кв.м. со скидкой</th> 
+		        			<th>Стоимость квартиры со скидкой</th> 
+		        			<th>Цена за 1 кв.м. в рассрочку</th> 
+		        			<th>Стоимость в рассрочку</th> 
+		        			<th>Номер дома</th>
+		        			<th>Блок секции</th>
+							<th>Количество квартир</th>
+		        		</tr>
+		        	</thead>
+		        	<tbody>
+		        		<tr ng-repeat="plan in plans | StockFilter: filter">
+		        			<th>{{$index+1}}</th>
+		        			<td>{{plan.name}}</td>
+		        			<td>{{plan.area}}</td>
+		        			<td>
+		        				<span ng-show="!!plan.info.super_price">{{Math.round(plan.info.super_price/plan.area) | price}}</span>
+			        			<span ng-hide="!!plan.info.super_price">-</span>
+		        			</td>
+		        			<td>
+			        			<span ng-show="!!plan.info.super_price">{{plan.info.super_price | price}}</span>
+			        			<span ng-hide="!!plan.info.super_price">-</span>
+		        			</td>
+		        			<td>
+		        				<span ng-show="!!plan.info.installment_price">{{Math.round(plan.info.installment_price/plan.area) | price}}</span>
+			        			<span ng-hide="!!plan.info.installment_price">-</span>
+		        			</td>
+		        			<td>
+		        				<span ng-show="!!plan.info.installment_price">{{plan.info.installment_price | price}}</span>
+			        			<span ng-hide="!!plan.info.installment_price">-</span>
+		        			</td>
+		        			<td>{{plan.info.buildings}}</td>
+		        			<td>{{plan.info.sections}}</td>
+		        			<td>{{plan.info.count}}</td>
+		        		</tr>
+		        	</tbody>
+	        	</table>
+				
+			</div>
+			</div>
+	    </div>
+	</div>
+</div>

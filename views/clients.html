@@ -1,0 +1,84 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        	<div class="row">
+		        <div class="col-xs-2">
+	                <div class="form-group">
+	                    <label>Менеджер</label>
+	                    <div class="row">
+	                    	<div class="col-xs-12">
+	                    		<div one-select model="filter.user" list="list.users"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+		        	<div class="form-group has-feedback">
+	                    <label>ФИО клиента</label>
+	                    <input type="text" class="form-control" placeholder="Введите фамилию клиента"
+	                    ng-model='filter.fio'
+	                    ng-model-options="{debounce: { 'default': 500}}">
+	                    <i class="ion-search form-control-feedback l-h-34"></i>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+		        	<div class="form-group col-xs-9">
+	                    <label>Телефон клиента</label>
+	                    <input type="text" class="form-control"
+	                    	input-connection
+							ng-model="phone"
+							conmodel='filter.phone'
+							ui-mask="+7 (999) 999-99-99"
+							model-view-value="true">
+	                </div>
+		        </div>
+
+		    </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+         	<!-- <button class="pull-right btn btn-default" ng-click='proj.Mod.add()' data-toggle="modal" data-target="#myModal">+ Добавить клиента</button> -->
+			<h4 class="text-dark">Клиенты</h4>
+			<p class="text-muted">Чтобы найти карточку клиента воспользуйтесь поиском по фамилии или телефону.</p>
+			<br><br>
+			<div class='row'>
+				<div ng-show="preload" class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif"  alt="">
+				</div>
+			</div>
+
+
+        	<table class="table table-striped fixed table-bordered" ng-hide="preload">
+        		<thead>
+	        		<tr>
+	        			<th style="width:30%">Клиент</th>
+	        			<th style="width:25%">Телефон</th>
+ 	        			<!--<th>Объект</th>
+	        			<th>Этап сделки</th> -->
+	        			<th style="width:25%" sort-item="contacts.time" class="active-sort reverse">Последний контакт</th>
+	        			<th style="width:20%">Менеджер</th>
+	        		</tr>
+        		</thead>
+        		<tbody>
+	        		<tr dir-paginate="client in filtered_clients | orderBy: isReverse+activeItem | itemsPerPage: 20 track by $index">
+	        			<td><a href="#/clients/{{client.id}}">{{client.fio}}</a></td>
+	        			<td>{{client.phone}}</td>
+	        			<!--<td>??Объект</td>
+	        			<td>??Этап сделки</td> -->
+	        			<td>{{client.contacts.time | date:'dd.MM.yyyy HH:mm'}}</td>
+	        			<td>{{users[client.contacts.user].name}}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	<div class='row'>
+        		<dir-pagination-controls class='pull-right'></dir-pagination-controls>
+        	</div>
+
+        </div>
+    </div>
+</div>

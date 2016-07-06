@@ -1,0 +1,218 @@
+<div class="content contact">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="card-box">
+          <h4 class="m-t-0"><b>Новый контакт</b></h4>
+          <p class="text-muted m-b-30 font-13">
+            После сохраниения нового контакта он заносится в историю клиента.
+          </p>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="bg p-20">
+                <h4><b>Информация о клиенте</b></h4>
+                <form class="form-horizontal">
+
+                  <div class="form-group">
+                    <label for="name" class="col-xs-3 control-label">ФИО</label>
+                    <div class="col-xs-8"
+                      input-search-fio
+                      model="Mod.data['fio'].value"
+                      list='clientsList'
+                      result='result'
+                    ></div>
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-8" form-errors errors="Mod.data['fio'].errors"></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="phone" class="col-xs-3 control-label">Телефон</label>
+                    <div class="col-xs-8"
+                      input-search
+                      model="Mod.data['phone'].value"
+                      list='clientsList'
+                      result='result'
+                    ></div>
+                    <div class="col-xs-3"></div>
+                    <div class="col-xs-8" form-errors errors="Mod.data['phone'].errors"></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="col-xs-3 control-label">E-mail</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['email'].type"
+                      model="Mod.data['email'].value"
+                      list="Mod.data['email'].choices"
+                      errors="Mod.data['email'].errors"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-xs-12 control-label">Обратился по акции</label>
+                    <div class="col-xs-12"
+                      form-input
+                      type="Mod.data['sales'].type"
+                      model="Mod.data['sales'].value"
+                      list="Mod.data['sales'].choices"
+                      errors="Mod.data['sales'].errors"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-xs-12 control-label">Предпочтения клиента</label>
+                    <div class="col-xs-12"
+                      form-input
+                      type="Mod.data['preferences'].type"
+                      model="Mod.data['preferences'].value"
+                      list="Mod.data['preferences'].choices"
+                      errors="Mod.data['preferences'].errors"
+                    ></div>
+                  </div>
+<!--                   <div class="form-group">
+                    <label class="col-xs-3 control-label">Способ оплаты</label>
+                    <div class="col-xs-4"
+                      form-input
+                      type="Mod.data['payment'].type"
+                      model="Mod.data['payment'].value"
+                      list="Mod.data['payment'].choices"
+                      errors="Mod.data['payment'].errors"
+                    ></div>
+                  </div> -->
+
+                  <div class="form-group">
+                    <label class="col-xs-3 control-label">Интересует</label>
+                    <div class="col-xs-5"
+                      form-input
+                      type="Mod.data['building'].type"
+                      model="Mod.data['building'].value"
+                      list="Mod.data['building'].choices"
+                      errors="Mod.data['building'].errors"
+                    ></div>
+                    <div class="col-xs-3"
+                      form-input
+                      type="Mod.data['flat'].type"
+                      model="Mod.data['flat'].value"
+                      list="Mod.data['flat'].choices"
+                      errors="Mod.data['flat'].errors"
+                      placeholder="'квартира'"
+                    ></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-xs-3 control-label">Комментарий</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['comment'].type"
+                      model="Mod.data['comment'].value"
+                      list="Mod.data['comment'].choices"
+                      errors="Mod.data['comment'].errors"
+                    ></div>
+                  </div>
+
+                </form>
+              </div>
+              <div class='m-t-20'>
+                <button type="button" ng-click='Mod.create()' ng-disabled="Mod.isload" class="btn btn-success">Создать контакт</button>
+                <button type="button" ng-click='cancel()' class="btn btn-white">Отмена</button>
+              </div>
+            </div>
+
+            <div class="col-xs-6">
+
+              <div class="bg p-20">
+                <h4><b>Информация о контакте</b></h4>
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Вид контакта</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['typex'].type"
+                      model="Mod.data['typex'].value"
+                      list="Mod.data['typex'].choices"
+                      errors="Mod.data['typex'].errors"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Источник</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['source'].type"
+                      model="Mod.data['source'].value"
+                      list="Mod.data['source'].choices"
+                      errors="Mod.data['source'].errors"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Время</label>
+                    <div class="col-xs-3">
+                      <input type="text"
+                        class="form-control"
+                        ng-model="contact.time_time"
+                        ui-mask="99:99"
+                      />
+                    </div>
+                    <div class="col-xs-4"
+                      form-input
+                      type="Mod.data['time'].type"
+                      model="contact.time_date"
+                      list="Mod.data['time'].choices"
+                      errors="Mod.data['time'].errors"
+                    ></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Результат</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['result'].type"
+                      model="Mod.data['result'].value"
+                      list="Mod.data['result'].choices"
+                      errors="Mod.data['result'].errors"
+                    ></div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="bg p-20 m-t-20">
+                <h4><b>Повторный контакт</b></h4>
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Напомнить в</label>
+                    <div class="col-xs-3">
+                      <input type="text"
+                        class="form-control"
+                        ng-model="notification.time_time"
+                        ui-mask="99:99"
+                      />
+                    </div>
+                    <div class="col-xs-4"
+                      form-input
+                      type="Mod.data['notification_time'].type"
+                      model="notification.time_date"
+                      list="Mod.data['notification_time'].choices"
+                      errors="Mod.data['notification_time'].errors"
+                    ></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name" class="col-xs-4 control-label">Коментарий</label>
+                    <div class="col-xs-8"
+                      form-input
+                      type="Mod.data['notification_comment'].type"
+                      model="Mod.data['notification_comment'].value"
+                      list="Mod.data['notification_comment'].choices"
+                      errors="Mod.data['notification_comment'].errors"
+                    ></div>
+                  </div>
+                </form>
+              </div>
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>

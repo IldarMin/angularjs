@@ -1,0 +1,32 @@
+<div class="input-group custom">
+  <span class="input-group-addon state" ng-class="model.classx" ng-show="select.isType('state')">
+    <span class="glyphicon glyphicon-record"></span>
+  </span>
+
+  <span class="input-group-addon oform" ng-show="select.isType('status')">
+    <i class="md md-brightness-1 icon status" ng-class="model.classx"></i>
+  </span>
+
+  <div class="bootstrap-select input-group-btn form-control">
+    <button type="button" class="btn dropdown-toggle btn-white select-button r_select" aria-expanded="false"
+      ng-disabled='disabled'
+      ng-click='select.toggleDropdown()'
+      ng-class='(invalid) ? "has-error" : "" '>
+      <span class="filter-option pull-left">{{model.name}}</span>&nbsp;
+      <span class="caret" ng-hide="disabled"></span>
+    </button>
+    <div class="open select-menu-status" ng-show='select.showDropdown() && list.length>0'>
+      <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+        <li data-original-index="0"
+          ng-click='select.toggleName(obj)'
+          ng-repeat='obj in list | orderBy: "order"'
+          ng-show='select.isShow(obj)'>
+          <a tabindex="0" class="" style="" data-tokens="null">
+            <span class="text">{{obj.name}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,211 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        	<div class="row">
+		        <div class="col-xs-3">
+	                <div class="form-group">
+	                    <label>Площадь</label>
+	                    <div class="row">
+		                    <div class="col-xs-5">
+		                    	<input type="number" class="form-control" ignore-mouse-wheel min="0" ng-model="filter.area.from" min="0" ng-disabled="preload">
+		                    </div>
+		                    <div class="form-between"></div>
+		                    <div class="col-xs-5">
+		                    	<input type="number" class="form-control" ignore-mouse-wheel min="0" ng-model="filter.area.to" min="0" ng-disabled="preload">
+		                    </div>
+	                    </div>
+	                </div>
+		        </div>
+				<div class="col-xs-3">
+			    	<div class="form-group">
+	                    <label>Стоимость</label>
+	                    <div class="row">
+		                    <div class="col-xs-5">
+		                    	<input type="text" class="form-control" ng-model="filter.price.from" autonumber="price" ng-disabled="preload">
+		                    </div>
+		                    <div class="form-between"></div>
+		                    <div class="col-xs-5">
+		                    	<input type="text" class="form-control" ng-model="filter.price.to" autonumber="price" ng-disabled="preload">
+		                    </div>
+	                    </div>
+	                </div>
+	            </div>
+				<div class="col-xs-6">
+	                <div class="form-group" style="margin-left: 15px;">
+
+	                    <div class="row">
+	                    	<div class="col-xs-4" ng-hide="isDevelopers">
+								<label>Тип продаж</label>
+	                    		<div multiple-select list='filter.states' order="'order'" onchanged="changeState(par)" disabled="preload"></div>
+	                    	</div>
+	                    	<div class="col-xs-7">
+								<label>Этап</label>
+	                    		<div multiple-select-group list='filter.statuses' order="'order'" detailed="filter.detailed" disabled="preload"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		    </div>
+		    <div class="row">
+				<div class="col-xs-3">
+	                <div class="form-group">
+	                    <label>Дом (очередь)</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div multiple-select list='filter.buildings' disabled="preload"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+				<div class="col-xs-5">
+	                <div class="form-group">
+	                    <div class="row">
+		                    <div class="col-xs-5">
+								<label>Тип</label>
+		                      <div multiple-select list='filter.rooms' disabled="preload"></div>
+		                    </div>
+		                    <div class="col-xs-6">
+								<label>Планировка</label>
+		                      <div multiple-select list='filter.plans' disabled="preload"></div>
+		                    </div>
+	                    </div>
+	                </div>
+	            </div>
+
+	            <div class="col-xs-4">
+	            	<br>
+			    	<div class="" style="margin-top: 4px; margin-left: 15px;">
+			    		<button class="btn btn-default" ng-click="getByButton()" ng-disabled="preload">Применить фильтр</button>
+			    	</div>
+			    </div>
+		    </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+
+        	<div class='row' ng-show="preload">
+				<div class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif" alt="">
+				</div>
+			</div>
+
+			<div class="row" ng-show="!preload">
+				<div class="col-xs-12">
+					<h4>
+						<b style="font-weight: normal; color: #797979;">
+							Всего:
+							<span class='stock-text-custom'>{{Math.round(all.area*100)/100}} кв.м.</span>,
+							<span class='stock-text-custom'>{{all.count}} шт.</span> за
+							<span class='stock-text-custom'>{{Math.round(all.sum_super_price) | price}} р.</span> (со скидками),
+							<span class='stock-text-custom'>{{Math.round(all.sum_price) | price}} р.</span> (при 100% оплате)
+						</b>
+						<!--ng-click="exportExcell()"-->
+						<!-- <a class="label label-success button-action eXcell pull-right" href="api/excel/stock/{{getParamsFilter()}}">Экспорт в Excel</a> -->
+						<a class="label label-success button-action eXcell pull-right" role="button" ng-click="exportExcell()">Экспорт в Excel</a>
+					</h4>
+
+				</div>
+			</div>
+
+			<div class="row m-b-30" ng-repeat='(rooms_count, plans) in stock track by rooms_count' ng-show="plans.length>0">
+				<div class="col-xs-12">
+					<h4>
+						<b style="font-weight: normal; color: #797979;">
+							{{rooms_names[rooms_count]}}:
+							<span class='stock-text-custom'>{{ Math.round(info[rooms_count].area*100)/100 }} кв.м.</span>,
+							<span class='stock-text-custom'>{{info[rooms_count].count}} шт.</span> за
+							<span class='stock-text-custom'>{{Math.round(info[rooms_count].sum_super_price) | price}} р.</span> (со скидками),
+							<span class='stock-text-custom'>{{Math.round(info[rooms_count].sum_price) | price}} р.</span> (при 100% оплате)
+
+						</b>
+					</h4>
+					<table class="table table-striped table-bordered">
+			    		<thead>
+			    			<tr>
+			    				<th colspan='6'></th>
+			    				<th colspan='2' style='text-align:center'>Со скидкой</th>
+			    				<th colspan='2' style='text-align:center'>При 100% оплате</th>
+			    				<th colspan='2' style='text-align:center'>В рассрочку</th>
+			    			</tr>
+			        		<tr>
+			        			<th style="width:7%" sort-item="name" class="active-sort">Планировка</th>
+			        			<th style="width:9%" sort-item="info.min_area">Площадь</th>
+			        			<th style="width:7%" sort-item="info.buildings">Дом</th>
+			        			<th style="width:7%">БС</th>
+			        			<th style="width:10%">Этажи</th>
+			        			<th style="width:8%" sort-item="info.count">Кол-во</th>
+			        			<th style="width:9%" sort-item="info.super_price.price/info.min_area">Цена</th>
+			        			<th style="width:9%" sort-item="info.super_price.price">Cтоимость</th>
+			        			<th style="width:9%" sort-item="info.price.price/info.min_area">Цена</th>
+			        			<th style="width:9%" sort-item="info.price.price">Стоимость</th>
+			        			<th style="width:9%" sort-item="info.installment_price.price/info.min_area">Цена</th>
+			        			<th style="width:9%" sort-item="info.installment_price.price">Стоимость</th>
+			        		</tr>
+			        	</thead>
+			        	<tbody>
+			        		<tr ng-repeat="plan in plans | orderBy: isReverse+activeItem track by $index">
+			        			<td class="popover-inside">
+			        				<a tabindex="0" role="button" class="btn btn-link p-0"
+										data-trigger="focus"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopoverimg
+										img="plan.plan_img"
+										>
+				        				{{plan.name}}
+				        			</a>
+			        			</td>
+			        			<td>{{plan.info.f_area}}</td>
+			        			<td ng-bind-html="plan.building_html"></td>
+			        			<td ng-bind-html="plan.section_html"></td>
+			        			<td>{{plan.info.floors}}</td>
+			        			<td class="popover-inside">
+									<a tabindex="0" role="button" class="btn btn-link text-center p-0"
+										ng-if="plan.info.count>0"
+										data-trigger="click"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopovernew
+										data-content='{{plan.flats_html}}'
+										>
+										{{plan.info.count}}
+									</a>
+									<span ng-if="plan.info.count==0">{{plan.info.count}}</span>
+								</td>
+			        			<td>{{plan.info.a_super_price}}</td>
+			        			<td ng-bind-html="plan.info.f_super_price"></td>
+			        			<td>{{plan.info.a_price}}</td>
+								<td ng-bind-html="plan.info.f_price"></td>
+			        			<td>{{plan.info.a_installment_price}}</td>
+			        			<td ng-bind-html="plan.info.f_installment_price"></td>
+			        		</tr>
+			        		<tr class='warning'>
+			        			<td>Всего:</td>
+			        			<td>{{Math.round(info[rooms_count].area*100)/100 }}</td>
+			        			<td></td>
+			        			<td></td>
+			        			<td></td>
+			        			<td class="popover-inside">{{info[rooms_count].count}}</td>
+			        			<td></td>
+			        			<td>
+									<span ng-show="!info[rooms_count].sum_super_price && info[rooms_count].sum_super_price!=0">-</span>
+									<span ng-show="info[rooms_count].sum_super_price || info[rooms_count].sum_super_price==0">
+									{{Math.round(info[rooms_count].sum_super_price) | price}}</span>
+			        			</td>
+			        			<td></td>
+			        			<td>{{Math.round(info[rooms_count].sum_price) | price}}</td>
+			        			<td></td>
+			        			<td>{{Math.round(info[rooms_count].sum_installment_price) | price}}</td>
+			        		</tr>
+			        	</tbody>
+		        	</table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,25 @@
+<div class="bootstrap-select" ng-class='(invalid) ? "has-error" : "" '>
+  <input type="text" name="client" id="phone" class="form-control" autocomplete="off"
+  input-connection
+  ng-model="model"
+  conmodel='conmodel'
+  ui-mask="+7 (999) 999-99-99"
+  model-view-value="true"
+  ng-click='toShow()'
+  ng-disabled='disabled'
+  ng-keyup='checkResult($event)'>
+<!--   <i class="md md-close form-control-feedback l-h-34 m-r-10 button-action"
+  	ng-show="!disabled"
+  	ng-click='clearInput()'></i> -->
+</div>
+<div class="very_long_fio open select-menu" ng-show='showSearchResult()'>
+  <ul class="dropdown-menu inner" role="menu" style="max-height: 200px; overflow-y: auto; min-height: 0px;">
+    <li ng-repeat='obj in listSearch'>
+        <a ng-href="#/clients/{{obj.id}}" target="_blank" class="right_arrow"><i class="icon-user"></i></a>
+          <a tabindex="0" class="long_fio" style="" data-tokens="null" ng-click='pickObj(obj)'>
+              <span class="text">{{obj.phone}}</span><br>
+              <span class="search_fio_grey">{{obj.fio}}</span>
+          </a>
+    </li>
+  </ul>
+</div>

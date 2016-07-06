@@ -1,0 +1,190 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        	<div class="row">
+		        <div class="col-xs-3">
+	                <div class="form-group">
+	                    <label>Менеджер</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div one-select model="filter.user" list="list.users"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+	                <div class="form-group">
+	                    <label class="m-r-10">Фильтр по дате</label>
+	                    <div class="checkbox checkbox-primary m-0" style="display: inline-block;">
+							<input type="checkbox" id="checkbox" value="checkbox" ng-model="filter.detailed">
+							<label class="clarify noselect" for="checkbox">уточнить</label>
+						</div>
+		    			<div ng-hide="filter.detailed" fast-date from="filter.fast_duration.from" to="filter.fast_duration.to"></div>
+		    			<div ng-show="filter.detailed" class="row">
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.duration.from">
+	                    	</div>
+	                    	<div class="form-between dash"></div>
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.duration.to">
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+
+		        <div class="col-xs-3">
+	                <div class="form-group">
+	                    <label>Источник</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div multiple-select list="list.sources"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+		        	<div class="form-group">
+	                    <label>Вид контакта</label>
+	                    <div class="row">
+	                    	<div class="col-xs-12">
+	                    		<div one-select list="list.typexs" model="filter.typex"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+	            </div>
+		    </div>
+		    <div class="row">
+		    	<div class="col-xs-3">
+		    		<div class="form-group">
+	                    <label>ФИО клиента</label>
+	                    <div class="row">
+					        <div class="col-xs-12"
+			                  input-search-fio
+			                  model='fio'
+			                  list='filter.clients'
+			                  result='filter.client'
+			                ></div>
+			            </div>
+		            </div>
+		    	</div>
+		    	<div class="col-xs-3">
+		    		<div class="form-group">
+	                    <label>Телефон клиента</label>
+	                    <div class="row">
+					        <div class="col-xs-12"
+			                  input-search
+			                  model='phone'
+			                  list='filter.clients'
+			                  result='filter.client'
+			                ></div>
+			            </div>
+		            </div>
+		    	</div>
+		    	<div class="col-xs-3 pull-right">
+		    		<br>
+	                <button class="btn btn-default pull-right" ng-click="filterActions()">Применить фильтр</button>
+		        </div>
+		    </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+			<h4 class="text-dark">Журнал контактов</h4>
+			<br><br>
+			<div class='row'>
+				<div ng-show="preload.clients || preload.users || preload.actions" class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif"  alt="">
+				</div>
+			</div>
+
+        	<table class="table table-striped table-bordered" 
+        		ng-hide="preload.clients || preload.users || preload.actions" 
+        		ng-class="{'table-page-load': preload_page}">
+        		<thead>
+	        		<tr>
+	        			<th>№</th>
+	        			<th>Менеджер</th>
+	        			<th class="col-xs-2">Клиент</th>
+	        			<!-- <th>Телефон</th> -->
+	        			<th>Дата</th>
+	        			<th style="min-width: 195px;">Комментарий</th>
+	        			<th>Источник</th>
+	        			<th>Результат</th>
+	        			<th>Вид контакта</th>
+	        		</tr>
+        		</thead>
+        		<tbody>
+        			<tr ng-repeat="action in actions">
+        				<td>
+							{{$index+1 + (paginator.current-1)*40}}
+						</td>
+	        			<td>{{users[action.user].name}}</td>
+	        			<td>
+	        				<a href="#/clients/{{action.client}}">{{clients[action.client].fio}}</a>
+							<div class="small text-muted">{{clients[action.client].phone}}</div>
+						</td>
+	        			<td><nobr>{{action.time | date:'dd.MM.yyyy HH:mm'}}</nobr></td>
+	        			<td inline-editor-pencil
+	        				type="'text'"
+	        				model="action.comment"
+	        				save-callback="updateContact(action, 'comment')"
+							style="position: relative; word-break: break-word; max-width: 122px;"
+	        				>
+	        				{{action.comment}}
+	        			</td>
+	        			<td inline-editor-pencil
+	        				type="'select'"
+	        				model="action.source"
+	        				list="edit.sources"
+	        				save-callback="updateContact(action, 'source')"
+							style="position: relative;">
+	        				<nobr>{{sources[action.source].name}}</nobr>
+	        			</td>
+	        			<td inline-editor-pencil
+	        				type="'select'"
+	        				model="action.result"
+	        				list="edit.results"
+	        				save-callback="updateContact(action, 'result')"
+							style="position: relative;">
+	        				<nobr>{{result[action.result].name}}</nobr>
+	        			</td>
+	        			<td inline-editor-pencil
+	        				type="'select'"
+	        				model="action.typex"
+	        				list="edit.typexs"
+	        				save-callback="updateContact(action, 'typex')"
+							style="position: relative;">
+	        				<nobr>{{typex[action.typex].name}}</nobr>
+	        			</td>
+
+        			</tr>
+        		</tbody>
+        	</table>
+
+        	<div class="row" 
+        		ng-hide="preload.clients || preload.users || preload.actions"  
+        		ng-class="{'table-page-load': preload_page}">
+        		<div class="pull-right">
+        			<ul class="pagination">
+        				<li ng-class="{ disabled : paginator.current == 1 }">
+        					<a role="button" ng-click="paginator.newPage(paginator.current - 1)">‹</a>
+        				</li>
+        				<li ng-repeat="page in paginator.pages track by $index"
+        					ng-class="{ active : page.number==paginator.current, disabled : page.number == '...' || paginator.pages.length === 1 }">
+        					<a role="button" ng-click="paginator.newPage(page.number)">{{page.number}}</a>
+        				</li>
+
+        				<li ng-class="{ disabled : paginator.current == paginator.last_page }">
+        					<a role="button" ng-click="paginator.newPage(paginator.current + 1)">›</a>
+        				</li>
+        			</ul>
+        		</div>
+        	</div>
+
+        </div>
+    </div>
+</div>

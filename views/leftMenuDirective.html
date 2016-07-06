@@ -1,0 +1,18 @@
+  <div id="sidebar-menu">
+    <ul ng-repeat="tab in menulist">
+      <li class="text-muted menu-title">{{tab.parent}}</li>
+      <li ng-repeat='item in tab.items' ng-if="!item.link" class="has_sub">
+        <a role="button" class="waves-effect" toggle-elem item='item'><i class="{{item.ico}}"></i><span> {{item.name}} </span></a>
+        <ul class="list-unstyled">
+            <li ng-repeat="sub in item.links track by $index">
+              <a href="{{sub.link}}" active-elem>{{sub.name}}</a>
+            </li>
+        </ul>
+      </li>
+      <li ng-repeat='item in tab.items' ng-if="item.link">
+        <a href="{{item.link}}" active-elem><i class="{{item.ico}}"></i><span> {{item.name}} </span></a>
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="clearfix"></div>

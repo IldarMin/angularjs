@@ -1,0 +1,162 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+        	<div class="row">
+        		<div class="col-xs-2">
+	                <div class="form-group">
+	                    <label>Менеджер</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div one-select model="filter.user" list="list.users"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-2">
+	                <div class="form-group">
+	                    <label>Выберите дом</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div multiple-select list="filter.buildings"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+		        	<div class="form-group">
+	                    <label>Поиск по клиентам</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11 has-feedback">
+			                    <input type="text" class="form-control" placeholder="Введите фамилию клиента" ng-model='filter.client'>
+			                    <i class="ion-search form-control-feedback l-h-34 m-r-5"></i>
+			                </div>
+			            </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-2">
+		        	<div class="form-group">
+	                    <label>Тип договора</label>
+	                     <div class="row">
+	                    	<div class="col-xs-11">
+		                    	<div multiple-select list="filter.status_types"></div>
+		                    </div>
+	                    </div>
+	                </div>
+		        </div>
+		    </div>
+
+		    <div class="row">
+		    	<div class="col-xs-4">
+		    		<div class="form-group">
+						<label class="m-r-10">Фильтр по дате договора</label>
+						<div class="checkbox checkbox-primary" style="display: inline-block;">
+							<input type="checkbox" id="checkbox" value="checkbox" ng-model="filter.detailed">
+							<label class="clarify noselect" for="checkbox">уточнить</label>
+						</div>
+		    			<div ng-hide="filter.detailed" fast-date from="filter.fast_duration.from" to="filter.fast_duration.to"></div>
+		    			<div ng-show="filter.detailed" class="row">
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.duration.from">
+	                    	</div>
+	                    	<div class="form-between dash"></div>
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.duration.to">
+	                    	</div>
+	                    </div>
+
+		    		</div>
+		    	</div>
+		    </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+			<h4 class="text-dark">Реестр резервов</h4>
+			<br>
+
+			<div class='row' ng-show="preload.reserves || preload.clients">
+				<div class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif"  alt="">
+				</div>
+			</div>
+
+
+			<div ng-hide="preload.clients || preload.reserves">
+				<h4 class="text-dark" style="font-weight: normal;">
+					Сумма поступлений:
+					<span class='stock-text-custom'>{{result | SumOf: 'amount' | price}} руб.</span>
+				</h4>
+				<br>
+
+
+	        	<table class="table table-striped table-bordered">
+	        		<thead>
+		        		<tr>
+		        			<th>#</th>
+		        			<th sort-item="date" class="active-sort reverse">Договор</th>
+		        			<th>Дом</th>
+		        			<th>Сумма резерва</th>
+		        			<th>ФИО</th>
+		        			<th>Тип договора</th>
+		        			<th>Примечание</th>
+		        		</tr>
+	        		</thead>
+	        		<tbody>
+		        		<tr dir-paginate="reserve in result=(reserves | ReservesFilter : filter : clients) | orderBy: isReverse+activeItem | itemsPerPage: 20 track by $index"
+		        			current-page="currentPage">
+		        			<td>{{$index + (currentPage-1)*20 + 1}}</td>
+		        			<td>
+		        				№ {{reserve.reserve_contract}} <br>
+		        				<em>{{reserve.date | date:'dd.MM.yyyy' }}</em>
+		        			</td>
+		        			<td>
+		        				<a href="#/buildings/{{reserve.flat.building.id}}/sections/">{{reserve.flat.building.adres}}, {{reserve.flat.building.number}}</a>
+		        				/ <a href="#/buildings/{{reserve.flat.building.id}}/sections/{{reserve.flat.section.id}}">БС {{reserve.flat.section.number}}</a>
+		        				<br>
+								<a href="#/flats/{{reserve.flat.id}}">Кв. {{reserve.flat.number}}</a> <br>
+								{{reserve.flat.plan.rooms_count}} комн. /{{reserve.flat.plan.area}} кв.м
+		        			</td>
+		        			<td>
+		        				{{reserve.amount | price}} 
+<!-- 		        				<br>
+								<div
+									inline-editor-pencil
+			        				type="'select'"
+			        				model="reserve.payment_type"
+			        				list="list.payment_types"
+			        				save-callback="updateReserve(reserve, 'payment_type')"
+									style="position: relative;">
+										<em>{{payment_types[reserve.payment_type].name}}</em>
+								</div> -->
+
+		        			</td>
+		        			<td>
+		        				<a href="#/clients/{{reserve.client}}">{{clients[reserve.client].fio}}</a> <br>
+		        				<em>Менеджер: {{users[reserve.user].name}}</em>
+		        			</td>
+		        			<td>
+		        				{{status_types[reserve.flat.contract_type].m_name}}<br>
+		        				<em>{{status_types[reserve.flat.contract_type].d_name}}</em>
+		        			</td>
+		        			<td inline-editor-pencil
+		        				type="'text'"
+		        				model="reserve.comment"
+		        				save-callback="updateReserve(reserve, 'comment')"
+		        				style="position: relative;">
+		        				{{reserve.comment}}
+		        			</td>
+		        		</tr>
+		        	</tbody>
+		        </table>
+
+		        <div class='row'>
+	        		<dir-pagination-controls class='pull-right'></dir-pagination-controls>
+	        	</div>
+		    </div>
+	    </div>
+	</div>
+</div>

@@ -1,0 +1,52 @@
+  <div class="row">
+      <div class="col-sm-12">
+          <p class="text-muted page-title-alt">Главная / Проекты / ЖК Победа</p>
+      </div>
+  </div>
+
+  <div class="row">
+      <div class="col-lg-12">
+          <div class="widget-bg-color-icon card-box">
+              Менюшка
+              <div class="clearfix"></div>
+          </div>
+      </div>
+  </div>
+
+  <div ng-repeat='floor in build track by $index'>
+    <div class="row floor-label">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <span class="label">
+         Этаж {{build.length - $index}}
+        </span>
+      </div>
+    </div>
+    <div class="row floor">
+      <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-xs-4" ng-repeat='flat in floor track by $index'>
+          <table class="table table-bordered flat-card" ng-style="{'background-color': flat.c_card}">
+            <tbody>
+              <tr>
+                <td><b>№123</b></td>
+                <td colspan='2'>3 971 524</td>
+              </tr>
+              <tr>
+                <td>1К.2</td>
+                <td colspan='2'><b>3 609 485</b></td>
+              </tr>
+              <tr>
+                <td>112.98</td>
+                <td>5,63</td>
+                <td>12,97</td>
+              </tr>
+              <tr>
+                <td class='status' ng-style="{'background-color': flat.color }" colspan='3'>
+                  <b ng-style="{'color': (flat.status=='') ? '#EBEFF2' : '#FFF'}">
+                    {{flat.name}}
+                  </b>
+                </td>
+              </tr>    
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>

@@ -1,0 +1,157 @@
+<ul class="nav nav-tabs navtab-bg">
+	<li ng-repeat="state in states | orderBy: 'order'" ng-class="tabs.isActive(state.id)" ng-click="tabs.setActive(state.id)">
+		<a role='button' aria-expanded="false">
+            <span class="visible-xs"><i class="fa fa-home"></i></span>
+            <span class="hidden-xs">{{state.name}}</span>
+        </a>
+	</li>
+</ul>
+
+
+<div class="tab-content">
+<div class="row">
+	<div class="col-xs-12">
+
+        	<div class='row'>
+				<div ng-show="preload" class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif"  alt="">
+				</div>
+			</div>
+
+			<div ng-hide="preload">
+				<div class="row m-b-30">
+					<div class="col-xs-12">
+						<h4>
+							<b style="font-weight: normal; color: #797979;">
+								<span class='stock-text-custom' ng-show="common_g[state_id].count">{{common_g[state_id].count}}</span>
+								<span class='stock-text-custom' ng-show="!common_g[state_id].count">0</span> квартир
+
+								<span class='stock-text-custom' ng-show="common_g[state_id].area">{{Math.round(common_g[state_id].area)}}</span>
+								<span class='stock-text-custom' ng-show="!common_g[state_id].area">0</span> кв.м. за
+
+								<span class='stock-text-custom' ng-show="common_g[state_id].price">{{Math.round(common_g[state_id].price) | price}}</span>
+								<span class='stock-text-custom' ng-show="!common_g[state_id].price">0</span> рублей
+							</b>
+						</h4>
+						<table class="table table-bordered text-center" id="table-total">
+							<!-- header -->
+							<tr>
+								<td></td>
+								<td colspan="2" ng-repeat="room in rooms">
+									{{room.name}}.
+								</td>
+								<td colspan="2">Всего</td>
+							</tr>
+
+							<!-- body rows -->
+							<tr
+								ng-repeat-start="status in include_statuses[state_id] | orderBy: 'order'"
+								ng-hide="status.special && !common[state_id][status.id]"
+								ng-class="status.special ? 'overdue' : ''">
+							    <td rowspan="2" class="text-left" style="vertical-align: middle;">{{status.name}}</td>
+							    <td ng-repeat-start="room in rooms">
+							    	<a tabindex="0" role="button" class="btn btn-link p-0"
+							    		ng-show="common[state_id][status.id][room.id].count"
+										data-trigger="click"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopovernew
+										data-content='{{getFlats(common[state_id][status.id][room.id].flats)}}'
+										>
+										{{common[state_id][status.id][room.id].count}}
+									</a>
+							    	<span ng-show="!common[state_id][status.id][room.id].count"><b>0</b></span>
+								</td>
+								<td ng-repeat-end>
+									<span ng-show="common[state_id][status.id][room.id].area">{{Math.round(common[state_id][status.id][room.id].area)}} кв.м</span>
+									<span ng-show="!common[state_id][status.id][room.id].area">-</span>
+								</td>
+								<td>
+									<a tabindex="0" role="button" class="btn btn-link p-0"
+										ng-show="common_st[state_id][status.id].count"
+										data-trigger="click"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopovernew
+										data-content='{{getFlats(common_st[state_id][status.id].flats)}}'
+										>
+										{{common_st[state_id][status.id].count}}
+									</a>
+							    	<span ng-show="!common_st[state_id][status.id].count"><b>0</b></span>
+								</td>
+								<td>
+									<span ng-show="common_st[state_id][status.id].area">{{Math.round(common_st[state_id][status.id].area)}} кв.м</span>
+									<span ng-show="!common_st[state_id][status.id].area">-</span>
+								</td>
+							</tr>
+							<tr
+								ng-repeat-end
+								ng-hide="status.special && !common[state_id][status.id]"
+								ng-class="status.special ? 'overdue' : ''">
+							    <td colspan="2" ng-repeat="room in rooms">
+								    <span ng-show="common[state_id][status.id][room.id].price">{{Math.round(common[state_id][status.id][room.id].price) | price}} руб.</span>
+								    <span ng-show="!common[state_id][status.id][room.id].price">-</span>
+								</td>
+								<td colspan="2">
+									<span ng-show="common_st[state_id][status.id].price">{{Math.round(common_st[state_id][status.id].price) | price}} руб.</span>
+									<span ng-show="!common_st[state_id][status.id].price">-</span>
+								</td>
+							</tr>
+
+							<!-- end row -->
+							<tr class="warning">
+								<td rowspan="2" class="text-left" style="vertical-align: middle;">Итого</td>
+								<td ng-repeat-start="room in rooms">
+									<a tabindex="0" role="button" class="btn btn-link p-0"
+										ng-show="common_r[state_id][room.id].count"
+										data-trigger="click"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopovernew
+										data-content='{{getFlats(common_r[state_id][room.id].flats)}}'
+										>
+										{{common_r[state_id][room.id].count}}
+									</a>
+							    	<span ng-show="!common_r[state_id][room.id].count">0</span>
+								</td>
+								<td ng-repeat-end>
+									<span ng-show="common_r[state_id][room.id].area">{{Math.round(common_r[state_id][room.id].area)}} кв.м</span>
+									<span ng-show="!common_r[state_id][room.id].area">-</span>
+								</td>
+
+								<td>
+									<a tabindex="0" role="button" class="btn btn-link p-0"
+										ng-show="common_g[state_id].count"
+										data-trigger="click"
+										data-toggle="popover"
+										data-placement="right"
+										bootpopovernew
+										data-content='{{getFlats(common_g[state_id].flats)}}'
+										>
+										{{common_g[state_id].count}}
+									</a>
+							    	<span ng-show="!common_g[state_id].count"><b>0</b></span>
+								</td>
+								<td>
+									<span ng-show="common_g[state_id].area">{{Math.round(common_g[state_id].area)}} кв.м</span>
+									<span ng-show="!common_g[state_id].area">-</span>
+								</td>
+							</tr>
+							<tr class="warning">
+								<td colspan="2" ng-repeat="room in rooms">
+								    <span ng-show="common_r[state_id][room.id].price">{{Math.round(common_r[state_id][room.id].price) | price}} руб.</span>
+								    <span ng-show="!common_r[state_id][room.id].price">-</span>
+								</td>
+								<td colspan="2">
+									<span ng-show="common_g[state_id].price">{{Math.round(common_g[state_id].price) | price}} руб.</span>
+									<span ng-show="!common_g[state_id].price">-</span>
+								</td>
+							</tr>
+
+						</table>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>
+</div>

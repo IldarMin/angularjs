@@ -1,0 +1,71 @@
+<div class="row page-header m-t-15">
+	<div class="col-lg-12">
+    	<button class="pull-right btn btn-default" ng-click='Plan.Mod.add_fix()' data-toggle="modal" data-target="#myModal">+ Добавить планировку</button>
+		<h4 class="font-bold">Планировки</h4>
+    </div>
+</div>
+
+<div class="row" ng-repeat='plans_by_room in Plan.plans | orderBy: "name" | groupBy: "rooms_count"'>
+    <div class="col-xs-12 m-b-10">
+        <span class="label label-grey">{{Plan.rooms[plans_by_room[0].rooms_count].name}}</span>
+    </div>
+	<div class="col-xs-2 flat-row-container p-b-20" ng-repeat='plan in plans_by_room'>
+        <a role='button' class="flat-row">
+            <div class='tools-row'>
+                <i class="md md-content-copy" ng-click='Plan.Mod.copy(plan)' data-toggle="modal" data-target="#myModal"></i>
+                <i class="md md-mode-edit" ng-click='Plan.Mod.edit(plan)' data-toggle="modal" data-target="#myModal"></i>
+                <i class="md md-clear" ng-click='Plan.Mod.delet(plan)' data-toggle="modal" data-target="#myModal"></i>
+            </div>
+            <div class="img-wrapper p-10">
+              <img src="{{Plan.base_href}}{{plan.plan_img}}" alt="">
+            </div>
+            <div class="text font-bold clearfix info-row row">
+              <div class="col-xs-6">{{plan.rooms_count}}{{plan.typology}}.{{plan.mirror}}-{{plan.variant}}</div>
+              <div class="col-xs-6">{{plan.area}} м<sup>2</sup></div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+    <!-- style="width:55%;" -->
+        <div class="modal-content">
+            <div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" ng-show='Plan.Mod.show("create")' id="myModalLabel">Создание планировки</h4>
+                <h4 class="modal-title" ng-show='Plan.Mod.show("copy")' id="myModalLabel">Создание копии</h4>
+                <h4 class="modal-title" ng-show='Plan.Mod.show("update")' id="myModalLabel">Изменение планировки</h4>
+                <h4 class="modal-title" ng-show='Plan.Mod.show("remove")' id="myModalLabel">Удаление планировки</h4>
+            </div>
+            <div class="modal-body" ng-hide='Plan.Mod.show("remove")'>
+				<form class="form-horizontal" role="form">
+					<div class="form-group" ng-repeat='field in Plan.form' ng-hide="$last">
+				        <label class="col-sm-4 control-label">{{field.verbose}}</label>
+				        <div class="col-sm-8"
+                            form-input
+                            type='Plan.Mod.data[field.name].type'
+                            model='Plan.Mod.data[field.name].value'
+                            list='Plan.Mod.data[field.name].choices'
+                            errors='Plan.Mod.data[field.name].errors'
+                            objid='Plan.Mod.data[field.name].id'
+                        ></div>
+				    </div>
+				</form>
+            </div>
+            <div class="modal-body" ng-show='Plan.Mod.show("remove")'>
+                Вы действительно хотите удалить планировку "{{Plan.Mod.data['name'].value}}"?
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-4">
+                    <button type="button" ng-show='Plan.Mod.show("create")' ng-click='Plan.Mod.create()' class="btn btn-success" ng-disabled="Plan.Mod.isload">Создать</button>
+                    <button type="button" ng-show='Plan.Mod.show("update")' ng-click='Plan.Mod.update()' class="btn btn-success" ng-disabled="Plan.Mod.isload">Сохранить</button>
+                    <button type="button" ng-show='Plan.Mod.show("copy")' ng-click='Plan.Mod.create()' class="btn btn-success" ng-disabled="Plan.Mod.isload">Создать копию</button>
+                    <button type="button" ng-show='Plan.Mod.show("remove")' ng-click='Plan.Mod.remove()' class="btn btn-danger" ng-disabled="Plan.Mod.isload">Удалить</button>
+                    <button type="button" ng-click='Plan.Mod.cancel()' class="btn btn-white" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+
+		    <div class="row">
+			    <div class="col-xs-2">
+		        	<div class="form-group">
+	                    <label>Тип платежа</label>
+	                     <div class="row">
+	                    	<div class="col-xs-11">
+		                    	<div one-select model="filter.payment" list="list.payments"></div>
+		                    </div>
+	                    </div>
+	                </div>
+		        </div>
+		    	<div class="col-xs-4">
+	                <div class="form-group">
+	                    <label class="m-r-10">Планируемая дата</label>
+	                    <div class="checkbox checkbox-primary m-0" style="display: inline-block;">
+							<input type="checkbox" id="plan_checkbox" value="checkbox" ng-model="filter.plan.detailed">
+							<label class="clarify noselect" for="plan_checkbox">уточнить</label>
+						</div>
+						<div ng-hide="filter.plan.detailed" fast-date from="filter.plan.fast_duration.from" to="filter.plan.fast_duration.to"></div>
+	                    <div ng-show="filter.plan.detailed" class="row">
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.plan.duration.from">
+	                    	</div>
+	                    	<div class="form-between"></div>
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.plan.duration.to">
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-4">
+	                <div class="form-group">
+	                    <label class="m-r-10">Фактическая дата</label>
+	                    <div class="checkbox checkbox-primary m-0" style="display: inline-block;">
+							<input type="checkbox" id="fakt_checkbox" value="checkbox" ng-model="filter.fakt.detailed">
+							<label class="clarify noselect" for="fakt_checkbox">уточнить</label>
+						</div>
+						<div ng-hide="filter.fakt.detailed" fast-date all from="filter.fakt.fast_duration.from" to="filter.fakt.fast_duration.to"></div>
+	                    <div ng-show="filter.fakt.detailed" class="row">
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.fakt.duration.from">
+	                    	</div>
+	                    	<div class="form-between"></div>
+	                    	<div class="col-xs-5">
+	                    		<input type="text" class="form-control" placeholder="дд.мм.гг" jqdatepicker ng-model="filter.fakt.duration.to">
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		    	<div class="col-xs-2">
+					<div class="checkbox checkbox-primary">
+						<br>
+						<input type="checkbox" id="checkbox" ng-model="filter.isOverdued">
+						<label for="checkbox" class="noselect">Только просрочки</label>
+					</div>
+		        </div>
+		    </div>
+
+        	<div class="row">
+		        <div class="col-xs-3">
+	                <div class="form-group">
+	                    <label>Выберите дом</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11">
+	                    		<div one-select model="filter.building" list="list.buildings"></div>
+	                    	</div>
+	                    </div>
+	                </div>
+		        </div>
+		        <div class="col-xs-3">
+		        	<div class="form-group">
+	                    <label>Поиск по клиентам</label>
+	                    <div class="row">
+	                    	<div class="col-xs-11 has-feedback">
+			                    <input type="text" class="form-control" placeholder="Введите фамилию клиента" ng-model='filter.client'>
+			                    <i class="ion-search form-control-feedback l-h-34 m-r-5"></i>
+			                </div>
+			            </div>
+	                </div>
+		        </div>
+		    </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+	<div class="col-xs-12">
+        <div class="widget-bg-color-icon card-box">
+			<h4 class="text-dark">План поступлений</h4>
+			<br>
+
+			<div class='row' ng-show="preload.clients || preload.payments">
+				<div  class="col-xs-1 col-xs-offset-5">
+			    	<img src="assets/images/preloader.gif"  alt="">
+				</div>
+			</div>
+
+			<div ng-hide="preload.clients || preload.payments">
+    			<h4 class="text-dark" style="font-weight: normal;">
+    				Планируемая сумма: <span class='stock-text-custom'>{{result | SumOfPayments: 'amount' | price}} руб.</span>
+    			</h4>
+				<h4 class="text-dark" style="font-weight: normal;">
+					Фактическая: <span class='stock-text-custom'>{{result | SumOfPayments: 'amount' : 'fakt_date' | price}} руб.</span>
+				</h4>
+				<br>
+
+				<table class="table table-striped table-bordered">
+	        		<thead>
+		        		<tr>
+		        			<th style="width:3%">#</th>
+		        			<th style="width:20%">Клиент</th>
+		        			<th style="width:14%">Дом</th>
+		        			<th style="width:6%">№ Кв.</th>
+		        			<th style="width:5%">Комн.</th>
+		        			<th style="width:14%">Менеджер</th>
+		        			<th style="width:8%">Сумма</th>
+		        			<th style="width:10%" sort-item="date">Планир. опл.</th>
+		        			<th style="width:10%" sort-item="fakt_date" class="active-sort reverse">Факт. опл.</th>
+		        			<th style="width:10%">Тип платежа</th>
+		        		</tr>
+	        		</thead>
+	        		<tbody>
+		        		<tr dir-paginate="payment in result=(payments | PaymentsFilter : filter : clients) | orderBy: isReverse+activeItem | itemsPerPage: 20 track by $index"
+		        			ng-class="{'danger': isOverdue(payment.date, payment.fakt_date)}"
+		        			current-page="currentPage">
+		        			<td>{{$index + (currentPage-1)*20 + 1}}</td>
+		        			<td>
+								<span ng-show="payment.client"><a href="#/clients/{{payment.client}}">{{clients[payment.client].fio}}</a></span>
+								<span ng-show="!payment.client">-</span>
+		        			</td>
+		        			<td><a href="#/buildings/{{payment.flat.building.id}}/sections/">{{payment.flat.building.adres}}, д.{{payment.flat.building.number}}</a></td>
+		        			<td><a href="#/flats/{{payment.flat.id}}">{{payment.flat.number}}</a></td>
+		        			<td>{{payment.flat.plan.rooms_count}}</td>
+		        			<td>{{users[payment.user].name}}</td>
+		        			<td><nobr>{{Math.round(payment.amount) | price}}</nobr></td>
+		        			<td>{{payment.date | date:'dd.MM.yyyy'}}</td>
+		        			<td>
+			        			<span ng-show="payment.fakt_date">{{payment.fakt_date | date:'dd.MM.yyyy'}}</span>
+			        			<span ng-show="!payment.fakt_date">-</span>
+		        			</td>
+		        			<td>{{payments_types_names[payment.xtype]}}</td>
+		        		</tr>
+	        		</tbody>
+	        	</table>
+				
+				<div class='row'>
+	        		<dir-pagination-controls class='pull-right'></dir-pagination-controls>
+	        	</div>
+			</div>
+
+        </div>
+    </div>
+</div>

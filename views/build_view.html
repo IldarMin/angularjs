@@ -1,0 +1,275 @@
+  <div class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li><a href="#">Главная</a></li>
+          <li class="active"><a href="#/buildings/{{building.id}}/sections/">{{building.name}}</a></li>
+        </ol>
+      </div>
+    </div>
+
+  <div class="row">
+      <div class="col-xs-12">
+          <div class="widget-bg-color-icon card-box">
+              <div class="row">
+                <div class="col-xs-5">
+                  <div class="m-b-10">
+                    <h4 class="text-dark section-header m-r-10">Выбор БС(подъезда)</h4>
+                    <span class="label label-primary button-action" ng-show='editMode' ng-click="addSection()" data-toggle="modal" data-target="#myModal">
+                      Добавить подъезд
+                    </span>
+                  </div>
+                  <div class="radio radio-primary radio-inline"
+                      ng-repeat='section in sections | orderBy: "number"'>
+                    <input type="radio" name="radio" id="radio{{section.id}}"
+                        ng-model="filter.ch_section"
+                        ng-value='section.id'
+                        ng-change='changeSection()'>
+                    <label for="radio{{section.id}}">{{section.name}}</label>
+                  </div>
+                </div>
+
+                <div class="col-xs-3">
+                  <div><h4 class="text-dark">Планировка и тип</h4></div>
+                  <div class="row">
+                    <div class="col-xs-5 my_moon_5">
+                      <div one-select
+                        list='filter.rooms'
+                        model='filter.ch_room'
+                        disabled="editMode"
+                        onchanged="filterPlans(par)"></div>
+                    </div>
+                    <div class="col-xs-5 my_moon_5">
+                      <div multiple-select list='filter.plans' disabled="editMode"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-4">
+                  <h4 class="text-dark">Тип продажи и этапы</h4>
+                  <div class="row">
+                    <div class="col-xs-5">
+                      <div multiple-select list='list.states' disabled="editMode" order="'order'"></div>
+                    </div>
+                    <div class="col-xs-7">
+                      <div multiple-select-group list='list.groups' detailed="filter.detailed" disabled="editMode" order="'order'"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row pull-right m-t-30">
+                <div class="col-xs-12">
+                  <div ng-hide="editMode">
+                    <span class="label label-inverse button-action"
+                     has-permission="app_nedv.change_buildview"
+                     ng-click='setEditMode(true)'>Редактировать</span>
+                    <span tabindex="0" class="label label-warning button-action"
+                      data-trigger="hover"
+                      data-placement="bottom"
+                      data-toggle="modal"
+                      data-target="#myModal1"
+                      >
+                      Легенда
+                    </span>
+                    <a class="label label-success button-action eXcell" href="/api/buildings/{{building.id}}/sections/{{filter.ch_section}}/excel">Экспорт в Excel</a>
+                  </div>
+                  <span ng-show='editMode' ng-click='setEditMode(false)' class="label label-inverse button-action">Вернуться к недвижимости</span>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+          </div>
+      </div>
+  </div>
+
+  <div ng-show='preload' class="preloader-over">
+    <div class="col-xs-1 col-xs-offset-5">
+      <img src="assets/images/preloader_custom.gif" style="width: 50px;" alt="">
+    </div>
+  </div>
+
+
+  <div ng-hide='preload' class="row m-b-20">
+    <div class="col-xl-12 col-xs-12 col-md-12 col-xs-12 col-xs-12">
+      <!-- <span ng-show='editMode && !!filter.ch_section' ng-click='addFloor()' type="button" class="btn btn-white btn-dotted btn-custom" data-toggle="modal" data-target="#myModal">Добавить этаж</span> -->
+      <button ng-show='editMode && !!filter.ch_section' ng-click='addFloor()' type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"> + Добавить этаж</button>
+    </div>
+  </div>
+
+  <div ng-hide='preload' ng-repeat="floor in section.floors | orderBy: '-number' ">
+    <div class="row floor-label">
+      <div class="col-xl-12 col-xs-12 col-md-12 col-xs-12 col-xs-12">
+        <span class="label floor-title">Этаж {{floor.number}}</span>
+        <!-- <span ng-show='editMode && !editFloorMode' class="label label-warning" ng-click='changeFloorIn(floor.number)'>Редактировать</span> -->
+        <!-- <span ng-show='editMode && !editFloorMode' class="label label-inverse button-action" ng-click='changeFloor(floor)' data-toggle="modal" data-target="#myModal">Изменить ТЭ</span> -->
+        <span ng-show='editFloorMode' class="label label-warning button-action">Сохранить</span>
+        <span ng-show='editFloorMode' class="label label-warning button-action">Сбросить</span>
+      </div>
+    </div>
+    <div class="row floor">
+      <div ng-repeat='flat in floor.flats | orderBy: "number"' class="col-xl-2 col-xs-2 col-md-2 col-xs-2 col-xs-2" >
+        <a href="#/flats/{{flat.id}}">
+        <table id='my_class'
+        class="table table-bordered flat-card state"
+        ng-class="[flat.state.classx, flat.status.classx, classByFilter(flat), classIsOverdue(flat.status_time, flat.status)]">
+          <tbody>
+            <tr>
+              <td><b>{{ flat.plan.name }}</b></td>
+              <td colspan='2'>{{flat.price | price}}</td>
+            </tr>
+            <tr>
+              <td>№{{flat.number}}</td>
+              <td colspan='2'>
+                <b ng-hide="!!flat.super_price"> - </b>
+                <b ng-show="!!flat.super_price">{{flat.super_price | price}}</b>
+              </td>
+            </tr>
+            <tr>
+              <td>{{flat.area}}</td>
+              <td>
+                <span ng-show="!flat.plan.kitchens"> - </span>
+                <span ng-show="!!flat.plan.kitchens">{{flat.plan.kitchens | roomsArea}}</span>
+              </td>
+              <td>
+                <span ng-show="!flat.plan.loggia"> - </span>
+                <span ng-show="!!flat.plan.loggia">{{flat.plan.loggia | roomsArea}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td class='status' ng-class="flat.status.classx" colspan='3'>
+                <b>{{flat.status.name}}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div>
+                    <button type="button" class="close" ng-click='cancel()' data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 ng-show='isShow("create", "section")' class="modal-title" id="myModalLabel">Новый подъезд</h4>
+                    <h4 ng-show='isShow("create", "floor")' class="modal-title" id="myModalLabel">Новый этаж</h4>
+                    <h4 ng-show='isShow("update", "floor")' class="modal-title" id="myModalLabel">Изменить этаж</h4>
+                </div>
+                <div class="modal-body">
+                  <form class="form-horizontal" role="form" ng-show='isShow("create", "section")'>
+                    <div class="form-group">
+                      <label class="col-xs-4 control-label">Блок секция</label>
+                      <div class="col-xs-4"
+                        form-input
+                        type="'Integer'"
+                        model="modal.data.number"
+                        list="[]"
+                      >
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-xs-4 control-label">Подъезд</label>
+                      <div class="col-xs-4"
+                        form-input
+                        type="'Integer'"
+                        model="modal.data.entrance"
+                        list="[]"
+                      >
+                      </div>
+                    </div>
+                  </form>
+
+                  <form class="form-horizontal" role="form" ng-show='isShow("create", "floor") || isShow("update", "floor")'>
+
+                    <div class="form-group">
+                      <label class="col-xs-4 control-label">Типовой этаж</label>
+                      <div class="col-xs-7"
+                        form-input
+                        type="'Select'"
+                        model="modal.data.typfloor"
+                        list="modal.data.typfloors"
+                      >
+                      </div>
+                    </div>
+
+<!--                     <div class="form-group">
+                      <label class="col-xs-3 control-label">Создать</label>
+                      <div class="radio radio-info">
+                          <input type="radio" name="radio5" id="radio15" value="option5" checked="">
+                          <label for="radio15">
+                              Один этаж
+                          </label>
+                      </div>
+                      <div class="radio radio-info">
+                          <input type="radio" name="radio5" id="radio15" value="option5" checked="">
+                          <label for="radio15">
+                              Несколько
+                          </label>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-xs-3 control-label">Диапазон</label>
+                      <div class="col-xs-9"
+                        form-input
+                        type="'Select'"
+                        model="modal.data.number"
+                        list="[]"
+                      >
+                      </div>
+                    </div>
+ -->
+                    <div class="form-group">
+                      <label class="col-xs-4 control-label">Этаж</label>
+                      <div class="col-xs-1">
+                        <p class="form-control-static"> №{{modal.data.floor}}</p>
+                      </div>
+                    </div>
+
+                  </form>
+                </div>
+                <div class="row">
+                  <div class="col-xs-6 col-xs-offset-4">
+                    <button type="button" ng-show='isShow("create", "section")' ng-click='createSection()' class="btn btn-success" ng-disabled="editPreload">Создать</button>
+                    <button type="button" ng-show='isShow("create", "floor")' ng-click='createFloor()' class="btn btn-success" ng-disabled="editPreload">Создать</button>
+                    <button type="button" ng-show='isShow("update", "floor")' ng-click='updateFloor()' class="btn btn-success" ng-disabled="editPreload">Изменить</button>
+                    <button type="button" ng-click='cancel()' class="btn btn-white" data-dismiss="modal">Отменить</button>
+                  </div>
+                  <div class="col-xs-6 col-xs-offset-4" ng-show="editError && editError.length>0">
+                    <p class="text-danger"> {{editError}} </p>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myModal1" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog">
+              <div class="modal-content legend_info">
+                  <div>
+                      <button type="button" class="close" ng-click='cancel()' data-dismiss="modal" aria-hidden="true">×</button>
+                      <h3 class="modal-title" id="myModalLabel1">Легенда</h3>
+                  </div>
+                  <div class="modal-body">
+                      <div class="col-xs-6 legend_state">
+                          <h4>Тип продажи</h4>
+                          <ul ng-repeat="state in legend.states">
+                              <li><i class="icon state {{state.classx}}"></i>{{state.name}}</li>
+                          </ul>
+                      </div>
+                      <div class="col-xs-6 legend_statuses">
+                          <h4>Этап</h4>
+                          <ul ng-repeat="status in legend.statuses | orderBy: 'order'">
+                              <li><i class="icon status {{status.classx}} md md-brightness-1"></i>{{status.name}}</li>
+                          </ul>
+                          <span class=""><i class="icon status prosro4en md md-brightness-1"></i>Внимание</span>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <!-- <div class="col-xs-6 col-xs-offset-4">
+                          <button type="button" ng-click='cancel()' class="btn btn-white" data-dismiss="modal">Отменить</button>
+                      </div> -->
+                  </div>
+              </div>
+          </div>
+    </div>
